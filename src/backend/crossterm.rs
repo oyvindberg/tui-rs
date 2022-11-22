@@ -11,7 +11,7 @@ use crossterm::{
         Attribute as CAttribute, Color as CColor, Print, SetAttribute, SetBackgroundColor,
         SetForegroundColor,
     },
-    terminal::{self, Clear, ClearType},
+    terminal::{size as terminalSize, Clear, ClearType},
 };
 use std::io::{self, Write};
 
@@ -112,7 +112,7 @@ where
 
     fn size(&self) -> io::Result<Rect> {
         let (width, height) =
-            terminal::size().map_err(|e| io::Error::new(io::ErrorKind::Other, e.to_string()))?;
+            terminalSize().map_err(|e| io::Error::new(io::ErrorKind::Other, e.to_string()))?;
 
         Ok(Rect::new(0, 0, width, height))
     }

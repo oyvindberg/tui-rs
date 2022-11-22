@@ -3,14 +3,7 @@ use std::io;
 use crate::buffer::Cell;
 use crate::layout::Rect;
 
-#[cfg(feature = "termion")]
-mod termion;
-#[cfg(feature = "termion")]
-pub use self::termion::TermionBackend;
-
-#[cfg(feature = "crossterm")]
 mod crossterm;
-#[cfg(feature = "crossterm")]
 pub use self::crossterm::CrosstermBackend;
 
 mod test;
