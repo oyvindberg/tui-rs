@@ -46,13 +46,15 @@ impl Cell {
         if let Some(c) = style.bg {
             self.bg = c;
         }
-        self.modifier.insert(style.add_modifier);
-        self.modifier.remove(style.sub_modifier);
+        self.modifier = self
+            .modifier
+            .insert(style.add_modifier)
+            .remove(style.sub_modifier);
         self
     }
 
     pub fn style(&self) -> Style {
-        Style::default()
+        Style::DEFAULT
             .fg(self.fg)
             .bg(self.bg)
             .add_modifier(self.modifier)
@@ -63,17 +65,17 @@ impl Cell {
         self.symbol.push(' ');
         self.fg = Color::Reset;
         self.bg = Color::Reset;
-        self.modifier = Modifier::empty();
+        self.modifier = Modifier::EMPTY;
     }
 }
 
-impl Default for Cell {
+impl<'a> Default for Cell {
     fn default() -> Cell {
         Cell {
             symbol: " ".into(),
             fg: Color::Reset,
             bg: Color::Reset,
-            modifier: Modifier::empty(),
+            modifier: Modifier::EMPTY,
         }
     }
 }
@@ -95,12 +97,12 @@ impl Default for Cell {
 /// let mut buf = Buffer::empty(Rect{x: 0, y: 0, width: 10, height: 5});
 /// buf.get_mut(0, 2).set_symbol("x");
 /// assert_eq!(buf.get(0, 2).symbol, "x");
-/// buf.set_string(3, 0, "string", Style::default().fg(Color::Red).bg(Color::White));
+/// buf.set_string(3, 0, "string", Style::DEFAULT.fg(Color::Red).bg(Color::White));
 /// assert_eq!(buf.get(5, 0), &Cell{
 ///     symbol: String::from("r"),
 ///     fg: Color::Red,
 ///     bg: Color::White,
-///     modifier: Modifier::empty()
+///     modifier: Modifier::EMPTY
 /// });
 /// buf.get_mut(5, 0).set_char('x');
 /// assert_eq!(buf.get(5, 0).symbol, "x");
@@ -132,7 +134,7 @@ impl Buffer {
     }
 
     /// Returns a Buffer containing the given lines
-    pub fn with_lines<S>(lines: Vec<S>) -> Buffer
+    pub fn with_lines<'a, S>(lines: Vec<S>) -> Buffer
     where
         S: AsRef<str>,
     {
@@ -149,7 +151,7 @@ impl Buffer {
             height,
         });
         for (y, line) in lines.iter().enumerate() {
-            buffer.set_string(0, y as u16, line, Style::default());
+            buffer.set_string(0, y as u16, line, Style::DEFAULT);
         }
         buffer
     }
@@ -505,21 +507,21 @@ mod tests {
         let mut buffer = Buffer::empty(area);
 
         // Zero-width
-        buffer.set_stringn(0, 0, "aaa", 0, Style::default());
+        buffer.set_stringn(0, 0, "aaa", 0, Style::DEFAULT);
         assert_eq!(buffer, Buffer::with_lines(vec!["     "]));
 
-        buffer.set_string(0, 0, "aaa", Style::default());
+        buffer.set_string(0, 0, "aaa", Style::DEFAULT);
         assert_eq!(buffer, Buffer::with_lines(vec!["aaa  "]));
 
         // Width limit:
-        buffer.set_stringn(0, 0, "bbbbbbbbbbbbbb", 4, Style::default());
+        buffer.set_stringn(0, 0, "bbbbbbbbbbbbbb", 4, Style::DEFAULT);
         assert_eq!(buffer, Buffer::with_lines(vec!["bbbb "]));
 
-        buffer.set_string(0, 0, "12345", Style::default());
+        buffer.set_string(0, 0, "12345", Style::DEFAULT);
         assert_eq!(buffer, Buffer::with_lines(vec!["12345"]));
 
         // Width truncation:
-        buffer.set_string(0, 0, "123456", Style::default());
+        buffer.set_string(0, 0, "123456", Style::DEFAULT);
         assert_eq!(buffer, Buffer::with_lines(vec!["12345"]));
     }
 
@@ -530,12 +532,12 @@ mod tests {
 
         // Leading grapheme with zero width
         let s = "\u{1}a";
-        buffer.set_stringn(0, 0, s, 1, Style::default());
+        buffer.set_stringn(0, 0, s, 1, Style::DEFAULT);
         assert_eq!(buffer, Buffer::with_lines(vec!["a"]));
 
         // Trailing grapheme with zero with
         let s = "a\u{1}";
-        buffer.set_stringn(0, 0, s, 1, Style::default());
+        buffer.set_stringn(0, 0, s, 1, Style::DEFAULT);
         assert_eq!(buffer, Buffer::with_lines(vec!["a"]));
     }
 
@@ -543,11 +545,11 @@ mod tests {
     fn buffer_set_string_double_width() {
         let area = Rect::new(0, 0, 5, 1);
         let mut buffer = Buffer::empty(area);
-        buffer.set_string(0, 0, "コン", Style::default());
+        buffer.set_string(0, 0, "コン", Style::DEFAULT);
         assert_eq!(buffer, Buffer::with_lines(vec!["コン "]));
 
         // Only 1 space left.
-        buffer.set_string(0, 0, "コンピ", Style::default());
+        buffer.set_string(0, 0, "コンピ", Style::DEFAULT);
         assert_eq!(buffer, Buffer::with_lines(vec!["コン "]));
     }
 

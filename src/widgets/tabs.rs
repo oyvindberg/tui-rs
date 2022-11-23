@@ -19,8 +19,8 @@ use crate::{
 /// let titles = ["Tab1", "Tab2", "Tab3", "Tab4"].iter().cloned().map(Spans::from).collect();
 /// Tabs::new(titles)
 ///     .block(Block::default().title("Tabs").borders(Borders::ALL))
-///     .style(Style::default().fg(Color::White))
-///     .highlight_style(Style::default().fg(Color::Yellow))
+///     .style(Style::DEFAULT.fg(Color::White))
+///     .highlight_style(Style::DEFAULT.fg(Color::Yellow))
 ///     .divider(DOT);
 /// ```
 #[derive(Debug, Clone)]
@@ -45,8 +45,8 @@ impl<'a> Tabs<'a> {
             block: None,
             titles,
             selected: 0,
-            style: Default::default(),
-            highlight_style: Default::default(),
+            style: Style::DEFAULT,
+            highlight_style: Style::DEFAULT,
             divider: Span::raw(symbols::line::VERTICAL),
         }
     }

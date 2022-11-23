@@ -111,7 +111,7 @@ impl fmt::Debug for Modifier {
             first = false;
             f.write_str("CROSSED_OUT")?;
         }
-        let extra_bits = self.bits & !Modifier::all().bits();
+        let extra_bits = self.bits & !Modifier::ALL.bits();
         if extra_bits != 0 {
             if !first {
                 f.write_str(" | ")?;
@@ -158,18 +158,12 @@ impl Modifier {
     };
 
     ///   Returns an empty set of flags.
-    #[inline]
-    pub const fn empty() -> Modifier {
-        Modifier { bits: 0 }
-    }
+    pub const EMPTY: Modifier = Modifier { bits: 0 };
 
     ///   Returns the set containing all flags.
-    #[inline]
-    pub const fn all() -> Modifier {
-        Modifier {
-            bits: 0b0001_1111_1111,
-        }
-    }
+    pub const ALL: Modifier = Modifier {
+        bits: 0b0001_1111_1111,
+    };
 
     ///   Returns the raw value of the flags currently stored.
     #[inline]
@@ -181,7 +175,7 @@ impl Modifier {
     ///   representation contains bits that do not correspond to a flag.
     #[inline]
     pub const fn from_bits(bits: u16) -> Option<Modifier> {
-        if (bits & !Modifier::all().bits()) == 0 {
+        if (bits & !Modifier::ALL.bits()) == 0 {
             Some(Modifier { bits })
         } else {
             None
@@ -193,7 +187,7 @@ impl Modifier {
     #[inline]
     pub const fn from_bits_truncate(bits: u16) -> Modifier {
         Modifier {
-            bits: bits & Modifier::all().bits,
+            bits: bits & Modifier::ALL.bits,
         }
     }
 
@@ -216,13 +210,13 @@ impl Modifier {
     ///   Returns  `true`  if no flags are currently stored.
     #[inline]
     pub const fn is_empty(&self) -> bool {
-        self.bits() == Modifier::empty().bits()
+        self.bits() == Modifier::EMPTY.bits()
     }
 
     ///   Returns  `true`  if all flags are currently set.
     #[inline]
     pub const fn is_all(&self) -> bool {
-        Modifier::all().bits | self.bits == self.bits
+        Modifier::ALL.bits | self.bits == self.bits
     }
 
     ///   Returns  `true`  if there are flags common to both  `self`  and  `other` .
@@ -236,20 +230,24 @@ impl Modifier {
 
     ///   Returns  `true`  if all of the flags in  `other`  are contained within  `self` .
     #[inline]
-    pub const fn contains(&self, other: Modifier) -> bool {
+    pub fn contains(&self, other: Modifier) -> bool {
         other != Modifier::EMPTY && (self.bits & other.bits) == other.bits
     }
 
     ///   Inserts the specified flags in-place.
     #[inline]
-    pub fn insert(&mut self, other: Modifier) {
-        self.bits |= other.bits;
+    pub fn insert(&self, other: Modifier) -> Modifier {
+        Modifier {
+            bits: self.bits | other.bits,
+        }
     }
 
     ///   Removes the specified flags in-place.
     #[inline]
-    pub fn remove(&mut self, other: Modifier) {
-        self.bits &= !other.bits;
+    pub fn remove(&self, other: Modifier) -> Modifier {
+        Modifier {
+            bits: self.bits & !other.bits,
+        }
     }
 
     ///   Returns the intersection between the flags in  `self`  and
@@ -402,7 +400,7 @@ impl ops::Not for Modifier {
     ///   Returns the complement of this set of flags.
     #[inline]
     fn not(self) -> Modifier {
-        Modifier { bits: !self.bits } & Modifier::all()
+        Modifier { bits: !self.bits } & Modifier::ALL
     }
 }
 
@@ -410,7 +408,7 @@ impl ops::Not for Modifier {
 ///
 /// ```rust
 /// # use tui::style::{Color, Modifier, Style};
-/// Style::default()
+/// Style::DEFAULT
 ///     .fg(Color::Black)
 ///     .bg(Color::Green)
 ///     .add_modifier(Modifier::ITALIC | Modifier::BOLD);
@@ -425,9 +423,9 @@ impl ops::Not for Modifier {
 /// # use tui::buffer::Buffer;
 /// # use tui::layout::Rect;
 /// let styles = [
-///     Style::default().fg(Color::Blue).add_modifier(Modifier::BOLD | Modifier::ITALIC),
-///     Style::default().bg(Color::Red),
-///     Style::default().fg(Color::Yellow).remove_modifier(Modifier::ITALIC),
+///     Style::DEFAULT.fg(Color::Blue).add_modifier(Modifier::BOLD | Modifier::ITALIC),
+///     Style::DEFAULT.bg(Color::Red),
+///     Style::DEFAULT.fg(Color::Yellow).remove_modifier(Modifier::ITALIC),
 /// ];
 /// let mut buffer = Buffer::empty(Rect::new(0, 0, 1, 1));
 /// for style in &styles {
@@ -438,7 +436,7 @@ impl ops::Not for Modifier {
 ///         fg: Some(Color::Yellow),
 ///         bg: Some(Color::Red),
 ///         add_modifier: Modifier::BOLD,
-///         sub_modifier: Modifier::empty(),
+///         sub_modifier: Modifier::EMPTY,
 ///     },
 ///     buffer.get(0, 0).style(),
 /// );
@@ -452,8 +450,8 @@ impl ops::Not for Modifier {
 /// # use tui::buffer::Buffer;
 /// # use tui::layout::Rect;
 /// let styles = [
-///     Style::default().fg(Color::Blue).add_modifier(Modifier::BOLD | Modifier::ITALIC),
-///     Style::reset().fg(Color::Yellow),
+///     Style::DEFAULT.fg(Color::Blue).add_modifier(Modifier::BOLD | Modifier::ITALIC),
+///     Style::RESET.fg(Color::Yellow),
 /// ];
 /// let mut buffer = Buffer::empty(Rect::new(0, 0, 1, 1));
 /// for style in &styles {
@@ -463,8 +461,8 @@ impl ops::Not for Modifier {
 ///     Style {
 ///         fg: Some(Color::Yellow),
 ///         bg: Some(Color::Reset),
-///         add_modifier: Modifier::empty(),
-///         sub_modifier: Modifier::empty(),
+///         add_modifier: Modifier::EMPTY,
+///         sub_modifier: Modifier::EMPTY,
 ///     },
 ///     buffer.get(0, 0).style(),
 /// );
@@ -478,27 +476,21 @@ pub struct Style {
     pub sub_modifier: Modifier,
 }
 
-impl Default for Style {
-    fn default() -> Style {
-        Style {
-            fg: None,
-            bg: None,
-            add_modifier: Modifier::empty(),
-            sub_modifier: Modifier::empty(),
-        }
-    }
-}
-
 impl Style {
+    pub const DEFAULT: Style = Style {
+        fg: None,
+        bg: None,
+        add_modifier: Modifier::EMPTY,
+        sub_modifier: Modifier::EMPTY,
+    };
+
     /// Returns a `Style` resetting all properties.
-    pub fn reset() -> Style {
-        Style {
-            fg: Some(Color::Reset),
-            bg: Some(Color::Reset),
-            add_modifier: Modifier::empty(),
-            sub_modifier: Modifier::all(),
-        }
-    }
+    pub const RESET: Style = Style {
+        fg: Some(Color::Reset),
+        bg: Some(Color::Reset),
+        add_modifier: Modifier::EMPTY,
+        sub_modifier: Modifier::ALL,
+    };
 
     /// Changes the foreground color.
     ///
@@ -506,13 +498,15 @@ impl Style {
     ///
     /// ```rust
     /// # use tui::style::{Color, Style};
-    /// let style = Style::default().fg(Color::Blue);
-    /// let diff = Style::default().fg(Color::Red);
-    /// assert_eq!(style.patch(diff), Style::default().fg(Color::Red));
+    /// let style = Style::DEFAULT.fg(Color::Blue);
+    /// let diff = Style::DEFAULT.fg(Color::Red);
+    /// assert_eq!(style.patch(diff), Style::DEFAULT.fg(Color::Red));
     /// ```
-    pub fn fg(mut self, color: Color) -> Style {
-        self.fg = Some(color);
-        self
+    pub fn fg(self, color: Color) -> Style {
+        Style {
+            fg: Some(color),
+            ..self
+        }
     }
 
     /// Changes the background color.
@@ -521,13 +515,15 @@ impl Style {
     ///
     /// ```rust
     /// # use tui::style::{Color, Style};
-    /// let style = Style::default().bg(Color::Blue);
-    /// let diff = Style::default().bg(Color::Red);
-    /// assert_eq!(style.patch(diff), Style::default().bg(Color::Red));
+    /// let style = Style::DEFAULT.bg(Color::Blue);
+    /// let diff = Style::DEFAULT.bg(Color::Red);
+    /// assert_eq!(style.patch(diff), Style::DEFAULT.bg(Color::Red));
     /// ```
-    pub fn bg(mut self, color: Color) -> Style {
-        self.bg = Some(color);
-        self
+    pub fn bg(self, color: Color) -> Style {
+        Style {
+            bg: Some(color),
+            ..self
+        }
     }
 
     /// Changes the text emphasis.
@@ -538,16 +534,18 @@ impl Style {
     ///
     /// ```rust
     /// # use tui::style::{Color, Modifier, Style};
-    /// let style = Style::default().add_modifier(Modifier::BOLD);
-    /// let diff = Style::default().add_modifier(Modifier::ITALIC);
+    /// let style = Style::DEFAULT.add_modifier(Modifier::BOLD);
+    /// let diff = Style::DEFAULT.add_modifier(Modifier::ITALIC);
     /// let patched = style.patch(diff);
     /// assert_eq!(patched.add_modifier, Modifier::BOLD | Modifier::ITALIC);
-    /// assert_eq!(patched.sub_modifier, Modifier::empty());
+    /// assert_eq!(patched.sub_modifier, Modifier::EMPTY);
     /// ```
-    pub fn add_modifier(mut self, modifier: Modifier) -> Style {
-        self.sub_modifier.remove(modifier);
-        self.add_modifier.insert(modifier);
-        self
+    pub fn add_modifier(self, modifier: Modifier) -> Style {
+        Style {
+            sub_modifier: self.sub_modifier.remove(modifier),
+            add_modifier: self.add_modifier.insert(modifier),
+            ..self
+        }
     }
 
     /// Changes the text emphasis.
@@ -558,16 +556,18 @@ impl Style {
     ///
     /// ```rust
     /// # use tui::style::{Color, Modifier, Style};
-    /// let style = Style::default().add_modifier(Modifier::BOLD | Modifier::ITALIC);
-    /// let diff = Style::default().remove_modifier(Modifier::ITALIC);
+    /// let style = Style::DEFAULT.add_modifier(Modifier::BOLD | Modifier::ITALIC);
+    /// let diff = Style::DEFAULT.remove_modifier(Modifier::ITALIC);
     /// let patched = style.patch(diff);
     /// assert_eq!(patched.add_modifier, Modifier::BOLD);
     /// assert_eq!(patched.sub_modifier, Modifier::ITALIC);
     /// ```
-    pub fn remove_modifier(mut self, modifier: Modifier) -> Style {
-        self.add_modifier.remove(modifier);
-        self.sub_modifier.insert(modifier);
-        self
+    pub fn remove_modifier(self, modifier: Modifier) -> Style {
+        Style {
+            add_modifier: self.add_modifier.remove(modifier),
+            sub_modifier: self.sub_modifier.insert(modifier),
+            ..self
+        }
     }
 
     /// Results in a combined style that is equivalent to applying the two individual styles to
@@ -576,23 +576,26 @@ impl Style {
     /// ## Examples
     /// ```
     /// # use tui::style::{Color, Modifier, Style};
-    /// let style_1 = Style::default().fg(Color::Yellow);
-    /// let style_2 = Style::default().bg(Color::Red);
+    /// let style_1 = Style::DEFAULT.fg(Color::Yellow);
+    /// let style_2 = Style::DEFAULT.bg(Color::Red);
     /// let combined = style_1.patch(style_2);
     /// assert_eq!(
-    ///     Style::default().patch(style_1).patch(style_2),
-    ///     Style::default().patch(combined));
+    ///     Style::DEFAULT.patch(style_1).patch(style_2),
+    ///     Style::DEFAULT.patch(combined));
     /// ```
-    pub fn patch(mut self, other: Style) -> Style {
-        self.fg = other.fg.or(self.fg);
-        self.bg = other.bg.or(self.bg);
-
-        self.add_modifier.remove(other.sub_modifier);
-        self.add_modifier.insert(other.add_modifier);
-        self.sub_modifier.remove(other.add_modifier);
-        self.sub_modifier.insert(other.sub_modifier);
-
-        self
+    pub fn patch(self, other: Style) -> Style {
+        Style {
+            fg: other.fg.or(self.fg),
+            bg: other.bg.or(self.bg),
+            add_modifier: self
+                .add_modifier
+                .remove(other.sub_modifier)
+                .insert(other.add_modifier),
+            sub_modifier: self
+                .sub_modifier
+                .remove(other.add_modifier)
+                .insert(other.sub_modifier),
+        }
     }
 }
 
@@ -602,15 +605,15 @@ mod tests {
 
     fn styles() -> Vec<Style> {
         vec![
-            Style::default(),
-            Style::default().fg(Color::Yellow),
-            Style::default().bg(Color::Yellow),
-            Style::default().add_modifier(Modifier::BOLD),
-            Style::default().remove_modifier(Modifier::BOLD),
-            Style::default().add_modifier(Modifier::ITALIC),
-            Style::default().remove_modifier(Modifier::ITALIC),
-            Style::default().add_modifier(Modifier::ITALIC | Modifier::BOLD),
-            Style::default().remove_modifier(Modifier::ITALIC | Modifier::BOLD),
+            Style::DEFAULT,
+            Style::DEFAULT.fg(Color::Yellow),
+            Style::DEFAULT.bg(Color::Yellow),
+            Style::DEFAULT.add_modifier(Modifier::BOLD),
+            Style::DEFAULT.remove_modifier(Modifier::BOLD),
+            Style::DEFAULT.add_modifier(Modifier::ITALIC),
+            Style::DEFAULT.remove_modifier(Modifier::ITALIC),
+            Style::DEFAULT.add_modifier(Modifier::ITALIC | Modifier::BOLD),
+            Style::DEFAULT.remove_modifier(Modifier::ITALIC | Modifier::BOLD),
         ]
     }
 
@@ -624,8 +627,8 @@ mod tests {
                         let combined = a.patch(b.patch(c.patch(d)));
 
                         assert_eq!(
-                            Style::default().patch(a).patch(b).patch(c).patch(d),
-                            Style::default().patch(combined)
+                            Style::DEFAULT.patch(a).patch(b).patch(c).patch(d),
+                            Style::DEFAULT.patch(combined)
                         );
                     }
                 }

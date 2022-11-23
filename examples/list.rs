@@ -219,10 +219,10 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
             for _ in 0..i.1 {
                 lines.push(Spans::from(Span::styled(
                     "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                    Style::default().add_modifier(Modifier::ITALIC),
+                    Style::DEFAULT.add_modifier(Modifier::ITALIC),
                 )));
             }
-            ListItem::new(lines).style(Style::default().fg(Color::Black).bg(Color::White))
+            ListItem::new(lines).style(Style::DEFAULT.fg(Color::Black).bg(Color::White))
         })
         .collect();
 
@@ -230,7 +230,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
     let items = List::new(items)
         .block(Block::default().borders(Borders::ALL).title("List"))
         .highlight_style(
-            Style::default()
+            Style::DEFAULT
                 .bg(Color::LightGreen)
                 .add_modifier(Modifier::BOLD),
         )
@@ -248,11 +248,11 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
         .map(|&(event, level)| {
             // Colorcode the level depending on its type
             let s = match level {
-                "CRITICAL" => Style::default().fg(Color::Red),
-                "ERROR" => Style::default().fg(Color::Magenta),
-                "WARNING" => Style::default().fg(Color::Yellow),
-                "INFO" => Style::default().fg(Color::Blue),
-                _ => Style::default(),
+                "CRITICAL" => Style::DEFAULT.fg(Color::Red),
+                "ERROR" => Style::DEFAULT.fg(Color::Magenta),
+                "WARNING" => Style::DEFAULT.fg(Color::Yellow),
+                "INFO" => Style::DEFAULT.fg(Color::Blue),
+                _ => Style::DEFAULT,
             };
             // Add a example datetime and apply proper spacing between them
             let header = Spans::from(vec![
@@ -260,7 +260,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
                 Span::raw(" "),
                 Span::styled(
                     "2020-01-01 10:00:00",
-                    Style::default().add_modifier(Modifier::ITALIC),
+                    Style::DEFAULT.add_modifier(Modifier::ITALIC),
                 ),
             ]);
             // The event gets its own line

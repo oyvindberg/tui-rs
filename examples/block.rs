@@ -81,17 +81,17 @@ fn ui<B: Backend>(f: &mut Frame<B>) {
     // Top left inner block with green background
     let block = Block::default()
         .title(vec![
-            Span::styled("With", Style::default().fg(Color::Yellow)),
+            Span::styled("With", Style::DEFAULT.fg(Color::Yellow)),
             Span::from(" background"),
         ])
-        .style(Style::default().bg(Color::Green));
+        .style(Style::DEFAULT.bg(Color::Green));
     f.render_widget(block, top_chunks[0]);
 
     // Top right inner block with styled title aligned to the right
     let block = Block::default()
         .title(Span::styled(
             "Styled title",
-            Style::default()
+            Style::DEFAULT
                 .fg(Color::White)
                 .bg(Color::Red)
                 .add_modifier(Modifier::BOLD),
@@ -112,7 +112,7 @@ fn ui<B: Backend>(f: &mut Frame<B>) {
     // Bottom right block with styled left and right border
     let block = Block::default()
         .title("With styled borders and doubled borders")
-        .border_style(Style::default().fg(Color::Cyan))
+        .border_style(Style::DEFAULT.fg(Color::Cyan))
         .borders(Borders::LEFT | Borders::RIGHT)
         .border_type(BorderType::Double);
     f.render_widget(block, bottom_chunks[1]);

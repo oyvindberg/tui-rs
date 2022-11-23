@@ -122,11 +122,11 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
         .margin(5)
         .split(f.size());
 
-    let selected_style = Style::default().add_modifier(Modifier::REVERSED);
-    let normal_style = Style::default().bg(Color::Blue);
+    let selected_style = Style::DEFAULT.add_modifier(Modifier::REVERSED);
+    let normal_style = Style::DEFAULT.bg(Color::Blue);
     let header_cells = ["Header1", "Header2", "Header3"]
         .iter()
-        .map(|h| Cell::from(*h).style(Style::default().fg(Color::Red)));
+        .map(|h| Cell::from(*h).style(Style::DEFAULT.fg(Color::Red)));
     let header = Row::new(header_cells)
         .style(normal_style)
         .height(1)

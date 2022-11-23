@@ -24,7 +24,7 @@ fn widgets_list_should_highlight_the_selected_item() {
                 ListItem::new("Item 3"),
             ];
             let list = List::new(items)
-                .highlight_style(Style::default().bg(Color::Yellow))
+                .highlight_style(Style::DEFAULT.bg(Color::Yellow))
                 .highlight_symbol(">> ");
             f.render_stateful_widget(list, size, &mut state);
         })
@@ -143,7 +143,7 @@ fn widgets_list_should_display_multiline_items() {
                 ListItem::new(vec![Spans::from("Item 3"), Spans::from("Item 3c")]),
             ];
             let list = List::new(items)
-                .highlight_style(Style::default().bg(Color::Yellow))
+                .highlight_style(Style::DEFAULT.bg(Color::Yellow))
                 .highlight_symbol(">> ");
             f.render_stateful_widget(list, size, &mut state);
         })
@@ -178,7 +178,7 @@ fn widgets_list_should_repeat_highlight_symbol() {
                 ListItem::new(vec![Spans::from("Item 3"), Spans::from("Item 3c")]),
             ];
             let list = List::new(items)
-                .highlight_style(Style::default().bg(Color::Yellow))
+                .highlight_style(Style::DEFAULT.bg(Color::Yellow))
                 .highlight_symbol(">> ")
                 .repeat_highlight_symbol(true);
             f.render_stateful_widget(list, size, &mut state);

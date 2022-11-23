@@ -51,7 +51,7 @@ where
     {
         let mut fg = Color::Reset;
         let mut bg = Color::Reset;
-        let mut modifier = Modifier::empty();
+        let mut modifier = Modifier::EMPTY;
         let mut last_pos: Option<(u16, u16)> = None;
         for (x, y, cell) in content {
             // Move the cursor if the previous location was not (x - 1, y)

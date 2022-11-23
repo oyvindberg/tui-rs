@@ -619,22 +619,22 @@ fn widgets_table_can_have_elements_styled_individually() {
         .draw(|f| {
             let size = f.size();
             let table = Table::new(vec![
-                Row::new(vec!["Row11", "Row12", "Row13"]).style(Style::default().fg(Color::Green)),
+                Row::new(vec!["Row11", "Row12", "Row13"]).style(Style::DEFAULT.fg(Color::Green)),
                 Row::new(vec![
                     Cell::from("Row21"),
-                    Cell::from("Row22").style(Style::default().fg(Color::Yellow)),
+                    Cell::from("Row22").style(Style::DEFAULT.fg(Color::Yellow)),
                     Cell::from(Spans::from(vec![
                         Span::raw("Row"),
-                        Span::styled("23", Style::default().fg(Color::Blue)),
+                        Span::styled("23", Style::DEFAULT.fg(Color::Blue)),
                     ]))
-                    .style(Style::default().fg(Color::Red)),
+                    .style(Style::DEFAULT.fg(Color::Red)),
                 ])
-                .style(Style::default().fg(Color::LightGreen)),
+                .style(Style::DEFAULT.fg(Color::LightGreen)),
             ])
             .header(Row::new(vec!["Head1", "Head2", "Head3"]).bottom_margin(1))
             .block(Block::default().borders(Borders::LEFT | Borders::RIGHT))
             .highlight_symbol(">> ")
-            .highlight_style(Style::default().add_modifier(Modifier::BOLD))
+            .highlight_style(Style::DEFAULT.add_modifier(Modifier::BOLD))
             .widths(&[
                 Constraint::Length(6),
                 Constraint::Length(6),
@@ -653,35 +653,33 @@ fn widgets_table_can_have_elements_styled_individually() {
     ]);
     // First row = row color + highlight style
     for col in 1..=28 {
-        expected.get_mut(col, 2).set_style(
-            Style::default()
-                .fg(Color::Green)
-                .add_modifier(Modifier::BOLD),
-        );
+        expected
+            .get_mut(col, 2)
+            .set_style(Style::DEFAULT.fg(Color::Green).add_modifier(Modifier::BOLD));
     }
     // Second row:
     // 1. row color
     for col in 1..=28 {
         expected
             .get_mut(col, 3)
-            .set_style(Style::default().fg(Color::LightGreen));
+            .set_style(Style::DEFAULT.fg(Color::LightGreen));
     }
     // 2. cell color
     for col in 11..=16 {
         expected
             .get_mut(col, 3)
-            .set_style(Style::default().fg(Color::Yellow));
+            .set_style(Style::DEFAULT.fg(Color::Yellow));
     }
     for col in 18..=23 {
         expected
             .get_mut(col, 3)
-            .set_style(Style::default().fg(Color::Red));
+            .set_style(Style::DEFAULT.fg(Color::Red));
     }
     // 3. text color
     for col in 21..=22 {
         expected
             .get_mut(col, 3)
-            .set_style(Style::default().fg(Color::Blue));
+            .set_style(Style::DEFAULT.fg(Color::Blue));
     }
     terminal.backend().assert_buffer(&expected);
 }

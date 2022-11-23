@@ -39,7 +39,7 @@ impl<'a> ListItem<'a> {
     {
         ListItem {
             content: content.into(),
-            style: Style::default(),
+            style: Style::DEFAULT,
         }
     }
 
@@ -63,8 +63,8 @@ impl<'a> ListItem<'a> {
 /// let items = [ListItem::new("Item 1"), ListItem::new("Item 2"), ListItem::new("Item 3")];
 /// List::new(items)
 ///     .block(Block::default().title("List").borders(Borders::ALL))
-///     .style(Style::default().fg(Color::White))
-///     .highlight_style(Style::default().add_modifier(Modifier::ITALIC))
+///     .style(Style::DEFAULT.fg(Color::White))
+///     .highlight_style(Style::DEFAULT.add_modifier(Modifier::ITALIC))
 ///     .highlight_symbol(">>");
 /// ```
 #[derive(Debug, Clone)]
@@ -89,10 +89,10 @@ impl<'a> List<'a> {
     {
         List {
             block: None,
-            style: Style::default(),
+            style: Style::DEFAULT,
             items: items.into(),
             start_corner: Corner::TopLeft,
-            highlight_style: Style::default(),
+            highlight_style: Style::DEFAULT,
             highlight_symbol: None,
             repeat_highlight_symbol: false,
         }

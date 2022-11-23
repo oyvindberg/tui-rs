@@ -19,9 +19,9 @@ use unicode_width::UnicodeWidthStr;
 ///     .block(Block::default().title("BarChart").borders(Borders::ALL))
 ///     .bar_width(3)
 ///     .bar_gap(1)
-///     .bar_style(Style::default().fg(Color::Yellow).bg(Color::Red))
-///     .value_style(Style::default().fg(Color::Red).add_modifier(Modifier::BOLD))
-///     .label_style(Style::default().fg(Color::White))
+///     .bar_style(Style::DEFAULT.fg(Color::Yellow).bg(Color::Red))
+///     .value_style(Style::DEFAULT.fg(Color::Red).add_modifier(Modifier::BOLD))
+///     .label_style(Style::DEFAULT.fg(Color::White))
 ///     .data(&[("B0", 0), ("B1", 2), ("B2", 4), ("B3", 3)])
 ///     .max(4);
 /// ```
@@ -59,13 +59,13 @@ impl<'a> Default for BarChart<'a> {
             max: None,
             data: &[],
             values: Vec::new(),
-            bar_style: Style::default(),
+            bar_style: Style::DEFAULT,
             bar_width: 1,
             bar_gap: 1,
             bar_set: symbols::bar::NINE_LEVELS,
-            value_style: Default::default(),
-            label_style: Default::default(),
-            style: Default::default(),
+            value_style: Style::DEFAULT,
+            label_style: Style::DEFAULT,
+            style: Style::DEFAULT,
         }
     }
 }

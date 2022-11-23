@@ -232,6 +232,7 @@ fn trim_offset(src: &str, mut offset: usize) -> &str {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::style::Style;
     use unicode_segmentation::UnicodeSegmentation;
 
     enum Composer {
@@ -240,7 +241,7 @@ mod test {
     }
 
     fn run_composer(which: Composer, text: &str, text_area_width: u16) -> (Vec<String>, Vec<u16>) {
-        let style = Default::default();
+        let style = Style::DEFAULT;
         let mut styled =
             UnicodeSegmentation::graphemes(text, true).map(|g| StyledGrapheme { symbol: g, style });
         let mut composer: Box<dyn LineComposer> = match which {

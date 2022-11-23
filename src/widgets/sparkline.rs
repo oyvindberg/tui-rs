@@ -18,7 +18,7 @@ use std::cmp::min;
 ///     .block(Block::default().title("Sparkline").borders(Borders::ALL))
 ///     .data(&[0, 2, 3, 4, 1, 4, 10])
 ///     .max(5)
-///     .style(Style::default().fg(Color::Red).bg(Color::White));
+///     .style(Style::DEFAULT.fg(Color::Red).bg(Color::White));
 /// ```
 #[derive(Debug, Clone)]
 pub struct Sparkline<'a> {
@@ -39,7 +39,7 @@ impl<'a> Default for Sparkline<'a> {
     fn default() -> Sparkline<'a> {
         Sparkline {
             block: None,
-            style: Default::default(),
+            style: Style::DEFAULT,
             data: &[],
             max: None,
             bar_set: symbols::bar::NINE_LEVELS,

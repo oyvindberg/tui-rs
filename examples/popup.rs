@@ -80,7 +80,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
     };
     let paragraph = Paragraph::new(Span::styled(
         text,
-        Style::default().add_modifier(Modifier::SLOW_BLINK),
+        Style::DEFAULT.add_modifier(Modifier::SLOW_BLINK),
     ))
     .alignment(Alignment::Center)
     .wrap(Wrap { trim: true });
@@ -89,7 +89,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
     let block = Block::default()
         .title("Content")
         .borders(Borders::ALL)
-        .style(Style::default().bg(Color::Blue));
+        .style(Style::DEFAULT.bg(Color::Blue));
     f.render_widget(block, chunks[1]);
 
     if app.show_popup {

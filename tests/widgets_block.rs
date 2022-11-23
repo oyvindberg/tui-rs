@@ -15,7 +15,7 @@ fn widgets_block_renders() {
     terminal
         .draw(|f| {
             let block = Block::default()
-                .title(Span::styled("Title", Style::default().fg(Color::LightBlue)))
+                .title(Span::styled("Title", Style::DEFAULT.fg(Color::LightBlue)))
                 .borders(Borders::ALL);
             f.render_widget(
                 block,
@@ -219,7 +219,7 @@ fn widgets_block_title_alignment() {
         let mut terminal = Terminal::new(backend).unwrap();
 
         let block = Block::default()
-            .title(Span::styled("Title", Style::default()))
+            .title(Span::styled("Title", Style::DEFAULT))
             .title_alignment(alignment)
             .borders(borders);
 

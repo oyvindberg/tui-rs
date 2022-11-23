@@ -163,7 +163,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
             ctx.print(
                 app.x,
                 -app.y,
-                Span::styled("You are here", Style::default().fg(Color::Yellow)),
+                Span::styled("You are here", Style::DEFAULT.fg(Color::Yellow)),
             );
         })
         .x_bounds([-180.0, 180.0])

@@ -440,7 +440,7 @@ where
             None => area,
         };
 
-        buf.set_style(canvas_area, Style::default().bg(self.background_color));
+        buf.set_style(canvas_area, Style::DEFAULT.bg(self.background_color));
 
         let width = canvas_area.width as usize;
 

@@ -90,7 +90,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
         .constraints([Constraint::Length(3), Constraint::Min(0)].as_ref())
         .split(size);
 
-    let block = Block::default().style(Style::default().bg(Color::White).fg(Color::Black));
+    let block = Block::default().style(Style::DEFAULT.bg(Color::White).fg(Color::Black));
     f.render_widget(block, size);
     let titles = app
         .titles
@@ -98,20 +98,16 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
         .map(|t| {
             let (first, rest) = t.split_at(1);
             Spans::from(vec![
-                Span::styled(first, Style::default().fg(Color::Yellow)),
-                Span::styled(rest, Style::default().fg(Color::Green)),
+                Span::styled(first, Style::DEFAULT.fg(Color::Yellow)),
+                Span::styled(rest, Style::DEFAULT.fg(Color::Green)),
             ])
         })
         .collect();
     let tabs = Tabs::new(titles)
         .block(Block::default().borders(Borders::ALL).title("Tabs"))
         .select(app.index)
-        .style(Style::default().fg(Color::Cyan))
-        .highlight_style(
-            Style::default()
-                .add_modifier(Modifier::BOLD)
-                .bg(Color::Black),
-        );
+        .style(Style::DEFAULT.fg(Color::Cyan))
+        .highlight_style(Style::DEFAULT.add_modifier(Modifier::BOLD).bg(Color::Black));
     f.render_widget(tabs, chunks[0]);
     let inner = match app.index {
         0 => Block::default().title("Inner 0").borders(Borders::ALL),

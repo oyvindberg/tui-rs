@@ -23,13 +23,13 @@ fn widgets_gauge_renders() {
 
             let gauge = Gauge::default()
                 .block(Block::default().title("Percentage").borders(Borders::ALL))
-                .gauge_style(Style::default().bg(Color::Blue).fg(Color::Red))
+                .gauge_style(Style::DEFAULT.bg(Color::Blue).fg(Color::Red))
                 .use_unicode(true)
                 .percent(43);
             f.render_widget(gauge, chunks[0]);
             let gauge = Gauge::default()
                 .block(Block::default().title("Ratio").borders(Borders::ALL))
-                .gauge_style(Style::default().bg(Color::Blue).fg(Color::Red))
+                .gauge_style(Style::DEFAULT.bg(Color::Blue).fg(Color::Red))
                 .use_unicode(true)
                 .ratio(0.511_313_934_313_1);
             f.render_widget(gauge, chunks[1]);
@@ -127,16 +127,14 @@ fn widgets_gauge_applies_styles() {
             let gauge = Gauge::default()
                 .block(
                     Block::default()
-                        .title(Span::styled("Test", Style::default().fg(Color::Red)))
+                        .title(Span::styled("Test", Style::DEFAULT.fg(Color::Red)))
                         .borders(Borders::ALL),
                 )
-                .gauge_style(Style::default().fg(Color::Blue).bg(Color::Red))
+                .gauge_style(Style::DEFAULT.fg(Color::Blue).bg(Color::Red))
                 .percent(43)
                 .label(Span::styled(
                     "43%",
-                    Style::default()
-                        .fg(Color::Green)
-                        .add_modifier(Modifier::BOLD),
+                    Style::DEFAULT.fg(Color::Green).add_modifier(Modifier::BOLD),
                 ));
             f.render_widget(gauge, f.size());
         })
@@ -149,24 +147,24 @@ fn widgets_gauge_applies_styles() {
         "└──────────┘",
     ]);
     // title
-    expected.set_style(Rect::new(1, 0, 4, 1), Style::default().fg(Color::Red));
+    expected.set_style(Rect::new(1, 0, 4, 1), Style::DEFAULT.fg(Color::Red));
     // gauge area
     expected.set_style(
         Rect::new(1, 1, 10, 3),
-        Style::default().fg(Color::Blue).bg(Color::Red),
+        Style::DEFAULT.fg(Color::Blue).bg(Color::Red),
     );
     // filled area
     for y in 1..4 {
         expected.set_style(
             Rect::new(1, y, 4, 1),
             // filled style is invert of gauge_style
-            Style::default().fg(Color::Red).bg(Color::Blue),
+            Style::DEFAULT.fg(Color::Red).bg(Color::Blue),
         );
     }
     // label (foreground and modifier from label style)
     expected.set_style(
         Rect::new(4, 2, 1, 1),
-        Style::default()
+        Style::DEFAULT
             .fg(Color::Green)
             // "4" is in the filled area so background is gauge_style foreground
             .bg(Color::Blue)
@@ -174,7 +172,7 @@ fn widgets_gauge_applies_styles() {
     );
     expected.set_style(
         Rect::new(5, 2, 2, 1),
-        Style::default()
+        Style::DEFAULT
             .fg(Color::Green)
             // "3%" is not in the filled area so background is gauge_style background
             .bg(Color::Red)
@@ -207,7 +205,7 @@ fn widgets_line_gauge_renders() {
     terminal
         .draw(|f| {
             let gauge = LineGauge::default()
-                .gauge_style(Style::default().fg(Color::Green).bg(Color::White))
+                .gauge_style(Style::DEFAULT.fg(Color::Green).bg(Color::White))
                 .ratio(0.43);
             f.render_widget(
                 gauge,
@@ -220,7 +218,7 @@ fn widgets_line_gauge_renders() {
             );
             let gauge = LineGauge::default()
                 .block(Block::default().title("Gauge 2").borders(Borders::ALL))
-                .gauge_style(Style::default().fg(Color::Green))
+                .gauge_style(Style::DEFAULT.fg(Color::Green))
                 .line_set(symbols::line::THICK)
                 .ratio(0.211_313_934_313_1);
             f.render_widget(

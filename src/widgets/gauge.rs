@@ -16,7 +16,7 @@ use crate::{
 /// # use tui::style::{Style, Color, Modifier};
 /// Gauge::default()
 ///     .block(Block::default().borders(Borders::ALL).title("Progress"))
-///     .gauge_style(Style::default().fg(Color::White).bg(Color::Black).add_modifier(Modifier::ITALIC))
+///     .gauge_style(Style::DEFAULT.fg(Color::White).bg(Color::Black).add_modifier(Modifier::ITALIC))
 ///     .percent(20);
 /// ```
 #[derive(Debug, Clone)]
@@ -36,8 +36,8 @@ impl<'a> Default for Gauge<'a> {
             ratio: 0.0,
             label: None,
             use_unicode: false,
-            style: Style::default(),
-            gauge_style: Style::default(),
+            style: Style::DEFAULT,
+            gauge_style: Style::DEFAULT,
         }
     }
 }
@@ -168,7 +168,7 @@ fn get_unicode_block<'a>(frac: f64) -> &'a str {
 /// # use tui::symbols;
 /// LineGauge::default()
 ///     .block(Block::default().borders(Borders::ALL).title("Progress"))
-///     .gauge_style(Style::default().fg(Color::White).bg(Color::Black).add_modifier(Modifier::BOLD))
+///     .gauge_style(Style::DEFAULT.fg(Color::White).bg(Color::Black).add_modifier(Modifier::BOLD))
 ///     .line_set(symbols::line::THICK)
 ///     .ratio(0.4);
 /// ```
@@ -187,9 +187,9 @@ impl<'a> Default for LineGauge<'a> {
             block: None,
             ratio: 0.0,
             label: None,
-            style: Style::default(),
+            style: Style::DEFAULT,
             line_set: symbols::line::NORMAL,
-            gauge_style: Style::default(),
+            gauge_style: Style::DEFAULT,
         }
     }
 }

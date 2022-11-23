@@ -126,27 +126,27 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
 
     let gauge = Gauge::default()
         .block(Block::default().title("Gauge1").borders(Borders::ALL))
-        .gauge_style(Style::default().fg(Color::Yellow))
+        .gauge_style(Style::DEFAULT.fg(Color::Yellow))
         .percent(app.progress1);
     f.render_widget(gauge, chunks[0]);
 
     let label = format!("{}/100", app.progress2);
     let gauge = Gauge::default()
         .block(Block::default().title("Gauge2").borders(Borders::ALL))
-        .gauge_style(Style::default().fg(Color::Magenta).bg(Color::Green))
+        .gauge_style(Style::DEFAULT.fg(Color::Magenta).bg(Color::Green))
         .percent(app.progress2)
         .label(label);
     f.render_widget(gauge, chunks[1]);
 
     let label = Span::styled(
         format!("{:.2}%", app.progress3 * 100.0),
-        Style::default()
+        Style::DEFAULT
             .fg(Color::Red)
             .add_modifier(Modifier::ITALIC | Modifier::BOLD),
     );
     let gauge = Gauge::default()
         .block(Block::default().title("Gauge3").borders(Borders::ALL))
-        .gauge_style(Style::default().fg(Color::Yellow))
+        .gauge_style(Style::DEFAULT.fg(Color::Yellow))
         .ratio(app.progress3)
         .label(label)
         .use_unicode(true);
@@ -156,7 +156,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
     let gauge = Gauge::default()
         .block(Block::default().title("Gauge4"))
         .gauge_style(
-            Style::default()
+            Style::DEFAULT
                 .fg(Color::Cyan)
                 .add_modifier(Modifier::ITALIC),
         )

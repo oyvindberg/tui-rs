@@ -131,22 +131,22 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
         InputMode::Normal => (
             vec![
                 Span::raw("Press "),
-                Span::styled("q", Style::default().add_modifier(Modifier::BOLD)),
+                Span::styled("q", Style::DEFAULT.add_modifier(Modifier::BOLD)),
                 Span::raw(" to exit, "),
-                Span::styled("e", Style::default().add_modifier(Modifier::BOLD)),
+                Span::styled("e", Style::DEFAULT.add_modifier(Modifier::BOLD)),
                 Span::raw(" to start editing."),
             ],
-            Style::default().add_modifier(Modifier::RAPID_BLINK),
+            Style::DEFAULT.add_modifier(Modifier::RAPID_BLINK),
         ),
         InputMode::Editing => (
             vec![
                 Span::raw("Press "),
-                Span::styled("Esc", Style::default().add_modifier(Modifier::BOLD)),
+                Span::styled("Esc", Style::DEFAULT.add_modifier(Modifier::BOLD)),
                 Span::raw(" to stop editing, "),
-                Span::styled("Enter", Style::default().add_modifier(Modifier::BOLD)),
+                Span::styled("Enter", Style::DEFAULT.add_modifier(Modifier::BOLD)),
                 Span::raw(" to record the message"),
             ],
-            Style::default(),
+            Style::DEFAULT,
         ),
     };
     let mut text = Text::from(Spans::from(msg));
@@ -156,8 +156,8 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
 
     let input = Paragraph::new(app.input.as_ref())
         .style(match app.input_mode {
-            InputMode::Normal => Style::default(),
-            InputMode::Editing => Style::default().fg(Color::Yellow),
+            InputMode::Normal => Style::DEFAULT,
+            InputMode::Editing => Style::DEFAULT.fg(Color::Yellow),
         })
         .block(Block::default().borders(Borders::ALL).title("Input"));
     f.render_widget(input, chunks[1]);

@@ -123,8 +123,8 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
         .block(Block::default().title("Data1").borders(Borders::ALL))
         .data(&app.data)
         .bar_width(9)
-        .bar_style(Style::default().fg(Color::Yellow))
-        .value_style(Style::default().fg(Color::Black).bg(Color::Yellow));
+        .bar_style(Style::DEFAULT.fg(Color::Yellow))
+        .value_style(Style::DEFAULT.fg(Color::Black).bg(Color::Yellow));
     f.render_widget(barchart, chunks[0]);
 
     let chunks = Layout::default()
@@ -137,23 +137,19 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
         .data(&app.data)
         .bar_width(5)
         .bar_gap(3)
-        .bar_style(Style::default().fg(Color::Green))
-        .value_style(
-            Style::default()
-                .bg(Color::Green)
-                .add_modifier(Modifier::BOLD),
-        );
+        .bar_style(Style::DEFAULT.fg(Color::Green))
+        .value_style(Style::DEFAULT.bg(Color::Green).add_modifier(Modifier::BOLD));
     f.render_widget(barchart, chunks[0]);
 
     let barchart = BarChart::default()
         .block(Block::default().title("Data3").borders(Borders::ALL))
         .data(&app.data)
-        .bar_style(Style::default().fg(Color::Red))
+        .bar_style(Style::DEFAULT.fg(Color::Red))
         .bar_width(7)
         .bar_gap(0)
-        .value_style(Style::default().bg(Color::Red))
+        .value_style(Style::DEFAULT.bg(Color::Red))
         .label_style(
-            Style::default()
+            Style::DEFAULT
                 .fg(Color::Cyan)
                 .add_modifier(Modifier::ITALIC),
         );

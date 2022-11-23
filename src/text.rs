@@ -33,7 +33,7 @@
 //! //   Span { content: Cow::Borrowed("My title"), style: Style { fg: Some(Color::Yellow), .. }
 //! // ])
 //! let block = Block::default().title(
-//!     Span::styled("My title", Style::default().fg(Color::Yellow))
+//!     Span::styled("My title", Style::DEFAULT.fg(Color::Yellow))
 //! );
 //!
 //! // A string with multiple styles.
@@ -42,14 +42,16 @@
 //! //   Span { content: Cow::Borrowed(" title"), .. }
 //! // ])
 //! let block = Block::default().title(vec![
-//!     Span::styled("My", Style::default().fg(Color::Yellow)),
+//!     Span::styled("My", Style::DEFAULT.fg(Color::Yellow)),
 //!     Span::raw(" title"),
 //! ]);
 //! ```
-use crate::style::Style;
 use std::borrow::Cow;
+
 use unicode_segmentation::UnicodeSegmentation;
 use unicode_width::UnicodeWidthStr;
+
+use crate::style::Style;
 
 /// A grapheme associated to a style.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -81,7 +83,7 @@ impl<'a> Span<'a> {
     {
         Span {
             content: content.into(),
-            style: Style::default(),
+            style: Style::DEFAULT,
         }
     }
 
@@ -92,7 +94,7 @@ impl<'a> Span<'a> {
     /// ```rust
     /// # use tui::text::Span;
     /// # use tui::style::{Color, Modifier, Style};
-    /// let style = Style::default().fg(Color::Yellow).add_modifier(Modifier::ITALIC);
+    /// let style = Style::DEFAULT.fg(Color::Yellow).add_modifier(Modifier::ITALIC);
     /// Span::styled("My text", style);
     /// Span::styled(String::from("My text"), style);
     /// ```
@@ -122,9 +124,9 @@ impl<'a> Span<'a> {
     /// # use tui::text::{Span, StyledGrapheme};
     /// # use tui::style::{Color, Modifier, Style};
     /// # use std::iter::Iterator;
-    /// let style = Style::default().fg(Color::Yellow);
+    /// let style = Style::DEFAULT.fg(Color::Yellow);
     /// let span = Span::styled("Text", style);
-    /// let style = Style::default().fg(Color::Green).bg(Color::Black);
+    /// let style = Style::DEFAULT.fg(Color::Green).bg(Color::Black);
     /// let styled_graphemes = span.styled_graphemes(style);
     /// assert_eq!(
     ///     vec![
@@ -133,8 +135,8 @@ impl<'a> Span<'a> {
     ///             style: Style {
     ///                 fg: Some(Color::Yellow),
     ///                 bg: Some(Color::Black),
-    ///                 add_modifier: Modifier::empty(),
-    ///                 sub_modifier: Modifier::empty(),
+    ///                 add_modifier: Modifier::EMPTY,
+    ///                 sub_modifier: Modifier::EMPTY,
     ///             },
     ///         },
     ///         StyledGrapheme {
@@ -142,8 +144,8 @@ impl<'a> Span<'a> {
     ///             style: Style {
     ///                 fg: Some(Color::Yellow),
     ///                 bg: Some(Color::Black),
-    ///                 add_modifier: Modifier::empty(),
-    ///                 sub_modifier: Modifier::empty(),
+    ///                 add_modifier: Modifier::EMPTY,
+    ///                 sub_modifier: Modifier::EMPTY,
     ///             },
     ///         },
     ///         StyledGrapheme {
@@ -151,8 +153,8 @@ impl<'a> Span<'a> {
     ///             style: Style {
     ///                 fg: Some(Color::Yellow),
     ///                 bg: Some(Color::Black),
-    ///                 add_modifier: Modifier::empty(),
-    ///                 sub_modifier: Modifier::empty(),
+    ///                 add_modifier: Modifier::EMPTY,
+    ///                 sub_modifier: Modifier::EMPTY,
     ///             },
     ///         },
     ///         StyledGrapheme {
@@ -160,8 +162,8 @@ impl<'a> Span<'a> {
     ///             style: Style {
     ///                 fg: Some(Color::Yellow),
     ///                 bg: Some(Color::Black),
-    ///                 add_modifier: Modifier::empty(),
-    ///                 sub_modifier: Modifier::empty(),
+    ///                 add_modifier: Modifier::EMPTY,
+    ///                 sub_modifier: Modifier::EMPTY,
     ///             },
     ///         },
     ///     ],
@@ -173,11 +175,11 @@ impl<'a> Span<'a> {
         base_style: Style,
     ) -> impl Iterator<Item = StyledGrapheme<'a>> {
         UnicodeSegmentation::graphemes(self.content.as_ref(), true)
+            .filter(|g| *g != "\n")
             .map(move |g| StyledGrapheme {
                 symbol: g,
                 style: base_style.patch(self.style),
             })
-            .filter(|s| s.symbol != "\n")
     }
 }
 
@@ -206,7 +208,7 @@ impl<'a> Spans<'a> {
     /// # use tui::text::{Span, Spans};
     /// # use tui::style::{Color, Style};
     /// let spans = Spans::from(vec![
-    ///     Span::styled("My", Style::default().fg(Color::Yellow)),
+    ///     Span::styled("My", Style::DEFAULT.fg(Color::Yellow)),
     ///     Span::raw(" text"),
     /// ]);
     /// assert_eq!(7, spans.width());
@@ -259,7 +261,7 @@ impl<'a> From<Spans<'a>> for String {
 /// ```rust
 /// # use tui::text::Text;
 /// # use tui::style::{Color, Modifier, Style};
-/// let style = Style::default().fg(Color::Yellow).add_modifier(Modifier::ITALIC);
+/// let style = Style::DEFAULT.fg(Color::Yellow).add_modifier(Modifier::ITALIC);
 ///
 /// // An initial two lines of `Text` built from a `&str`
 /// let mut text = Text::from("The first line\nThe second line");
@@ -307,7 +309,7 @@ impl<'a> Text<'a> {
     /// ```rust
     /// # use tui::text::Text;
     /// # use tui::style::{Color, Modifier, Style};
-    /// let style = Style::default().fg(Color::Yellow).add_modifier(Modifier::ITALIC);
+    /// let style = Style::DEFAULT.fg(Color::Yellow).add_modifier(Modifier::ITALIC);
     /// Text::styled("The first line\nThe second line", style);
     /// Text::styled(String::from("The first line\nThe second line"), style);
     /// ```
@@ -357,7 +359,7 @@ impl<'a> Text<'a> {
     /// ```rust
     /// # use tui::text::Text;
     /// # use tui::style::{Color, Modifier, Style};
-    /// let style = Style::default().fg(Color::Yellow).add_modifier(Modifier::ITALIC);
+    /// let style = Style::DEFAULT.fg(Color::Yellow).add_modifier(Modifier::ITALIC);
     /// let mut raw_text = Text::raw("The first line\nThe second line");
     /// let styled_text = Text::styled(String::from("The first line\nThe second line"), style);
     /// assert_ne!(raw_text, styled_text);

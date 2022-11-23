@@ -21,11 +21,11 @@ pub fn draw<B: Backend>(f: &mut Frame<B>, app: &mut App) {
         .tabs
         .titles
         .iter()
-        .map(|t| Spans::from(Span::styled(*t, Style::default().fg(Color::Green))))
+        .map(|t| Spans::from(Span::styled(*t, Style::DEFAULT.fg(Color::Green))))
         .collect();
     let tabs = Tabs::new(titles)
         .block(Block::default().borders(Borders::ALL).title(app.title))
-        .highlight_style(Style::default().fg(Color::Yellow))
+        .highlight_style(Style::DEFAULT.fg(Color::Yellow))
         .select(app.tabs.index);
     f.render_widget(tabs, chunks[0]);
     match app.tabs.index {
@@ -77,7 +77,7 @@ where
     let gauge = Gauge::default()
         .block(Block::default().title("Gauge:"))
         .gauge_style(
-            Style::default()
+            Style::DEFAULT
                 .fg(Color::Magenta)
                 .bg(Color::Black)
                 .add_modifier(Modifier::ITALIC | Modifier::BOLD),
@@ -88,7 +88,7 @@ where
 
     let sparkline = Sparkline::default()
         .block(Block::default().title("Sparkline:"))
-        .style(Style::default().fg(Color::Green))
+        .style(Style::DEFAULT.fg(Color::Green))
         .data(&app.sparkline.points)
         .bar_set(if app.enhanced_graphics {
             symbols::bar::NINE_LEVELS
@@ -99,7 +99,7 @@ where
 
     let line_gauge = LineGauge::default()
         .block(Block::default().title("LineGauge:"))
-        .gauge_style(Style::default().fg(Color::Magenta))
+        .gauge_style(Style::DEFAULT.fg(Color::Magenta))
         .line_set(if app.enhanced_graphics {
             symbols::line::THICK
         } else {
@@ -141,15 +141,15 @@ where
                 .collect();
             let tasks = List::new(tasks)
                 .block(Block::default().borders(Borders::ALL).title("List"))
-                .highlight_style(Style::default().add_modifier(Modifier::BOLD))
+                .highlight_style(Style::DEFAULT.add_modifier(Modifier::BOLD))
                 .highlight_symbol("> ");
             f.render_stateful_widget(tasks, chunks[0], &mut app.tasks.state);
 
             // Draw logs
-            let info_style = Style::default().fg(Color::Blue);
-            let warning_style = Style::default().fg(Color::Yellow);
-            let error_style = Style::default().fg(Color::Magenta);
-            let critical_style = Style::default().fg(Color::Red);
+            let info_style = Style::DEFAULT.fg(Color::Blue);
+            let warning_style = Style::DEFAULT.fg(Color::Yellow);
+            let error_style = Style::DEFAULT.fg(Color::Magenta);
+            let critical_style = Style::DEFAULT.fg(Color::Red);
             let logs: Vec<ListItem> = app
                 .logs
                 .items
@@ -183,20 +183,20 @@ where
                 symbols::bar::THREE_LEVELS
             })
             .value_style(
-                Style::default()
+                Style::DEFAULT
                     .fg(Color::Black)
                     .bg(Color::Green)
                     .add_modifier(Modifier::ITALIC),
             )
-            .label_style(Style::default().fg(Color::Yellow))
-            .bar_style(Style::default().fg(Color::Green));
+            .label_style(Style::DEFAULT.fg(Color::Yellow))
+            .bar_style(Style::DEFAULT.fg(Color::Green));
         f.render_widget(barchart, chunks[1]);
     }
     if app.show_chart {
         let x_labels = vec![
             Span::styled(
                 format!("{}", app.signals.window[0]),
-                Style::default().add_modifier(Modifier::BOLD),
+                Style::DEFAULT.add_modifier(Modifier::BOLD),
             ),
             Span::raw(format!(
                 "{}",
@@ -204,14 +204,14 @@ where
             )),
             Span::styled(
                 format!("{}", app.signals.window[1]),
-                Style::default().add_modifier(Modifier::BOLD),
+                Style::DEFAULT.add_modifier(Modifier::BOLD),
             ),
         ];
         let datasets = vec![
             Dataset::default()
                 .name("data2")
                 .marker(symbols::Marker::Dot)
-                .style(Style::default().fg(Color::Cyan))
+                .style(Style::DEFAULT.fg(Color::Cyan))
                 .data(&app.signals.sin1.points),
             Dataset::default()
                 .name("data3")
@@ -220,7 +220,7 @@ where
                 } else {
                     symbols::Marker::Dot
                 })
-                .style(Style::default().fg(Color::Yellow))
+                .style(Style::DEFAULT.fg(Color::Yellow))
                 .data(&app.signals.sin2.points),
         ];
         let chart = Chart::new(datasets)
@@ -228,28 +228,26 @@ where
                 Block::default()
                     .title(Span::styled(
                         "Chart",
-                        Style::default()
-                            .fg(Color::Cyan)
-                            .add_modifier(Modifier::BOLD),
+                        Style::DEFAULT.fg(Color::Cyan).add_modifier(Modifier::BOLD),
                     ))
                     .borders(Borders::ALL),
             )
             .x_axis(
                 Axis::default()
                     .title("X Axis")
-                    .style(Style::default().fg(Color::Gray))
+                    .style(Style::DEFAULT.fg(Color::Gray))
                     .bounds(app.signals.window)
                     .labels(x_labels),
             )
             .y_axis(
                 Axis::default()
                     .title("Y Axis")
-                    .style(Style::default().fg(Color::Gray))
+                    .style(Style::DEFAULT.fg(Color::Gray))
                     .bounds([-20.0, 20.0])
                     .labels(vec![
-                        Span::styled("-20", Style::default().add_modifier(Modifier::BOLD)),
+                        Span::styled("-20", Style::DEFAULT.add_modifier(Modifier::BOLD)),
                         Span::raw("0"),
-                        Span::styled("20", Style::default().add_modifier(Modifier::BOLD)),
+                        Span::styled("20", Style::DEFAULT.add_modifier(Modifier::BOLD)),
                     ]),
             );
         f.render_widget(chart, chunks[1]);
@@ -265,22 +263,22 @@ where
         Spans::from(""),
         Spans::from(vec![
             Span::from("For example: "),
-            Span::styled("under", Style::default().fg(Color::Red)),
+            Span::styled("under", Style::DEFAULT.fg(Color::Red)),
             Span::raw(" "),
-            Span::styled("the", Style::default().fg(Color::Green)),
+            Span::styled("the", Style::DEFAULT.fg(Color::Green)),
             Span::raw(" "),
-            Span::styled("rainbow", Style::default().fg(Color::Blue)),
+            Span::styled("rainbow", Style::DEFAULT.fg(Color::Blue)),
             Span::raw("."),
         ]),
         Spans::from(vec![
             Span::raw("Oh and if you didn't "),
-            Span::styled("notice", Style::default().add_modifier(Modifier::ITALIC)),
+            Span::styled("notice", Style::DEFAULT.add_modifier(Modifier::ITALIC)),
             Span::raw(" you can "),
-            Span::styled("automatically", Style::default().add_modifier(Modifier::BOLD)),
+            Span::styled("automatically", Style::DEFAULT.add_modifier(Modifier::BOLD)),
             Span::raw(" "),
-            Span::styled("wrap", Style::default().add_modifier(Modifier::REVERSED)),
+            Span::styled("wrap", Style::DEFAULT.add_modifier(Modifier::REVERSED)),
             Span::raw(" your "),
-            Span::styled("text", Style::default().add_modifier(Modifier::UNDERLINED)),
+            Span::styled("text", Style::DEFAULT.add_modifier(Modifier::UNDERLINED)),
             Span::raw(".")
         ]),
         Spans::from(
@@ -289,7 +287,7 @@ where
     ];
     let block = Block::default().borders(Borders::ALL).title(Span::styled(
         "Footer",
-        Style::default()
+        Style::DEFAULT
             .fg(Color::Magenta)
             .add_modifier(Modifier::BOLD),
     ));
@@ -305,8 +303,8 @@ where
         .constraints([Constraint::Percentage(30), Constraint::Percentage(70)].as_ref())
         .direction(Direction::Horizontal)
         .split(area);
-    let up_style = Style::default().fg(Color::Green);
-    let failure_style = Style::default()
+    let up_style = Style::DEFAULT.fg(Color::Green);
+    let failure_style = Style::DEFAULT
         .fg(Color::Red)
         .add_modifier(Modifier::RAPID_BLINK | Modifier::CROSSED_OUT);
     let rows = app.servers.iter().map(|s| {
@@ -320,7 +318,7 @@ where
     let table = Table::new(rows)
         .header(
             Row::new(vec!["Server", "Location", "Status"])
-                .style(Style::default().fg(Color::Yellow))
+                .style(Style::DEFAULT.fg(Color::Yellow))
                 .bottom_margin(1),
         )
         .block(Block::default().title("Servers").borders(Borders::ALL))
@@ -366,7 +364,7 @@ where
                 ctx.print(
                     server.coords.1,
                     server.coords.0,
-                    Span::styled("X", Style::default().fg(color)),
+                    Span::styled("X", Style::DEFAULT.fg(color)),
                 );
             }
         })
@@ -412,8 +410,8 @@ where
         .map(|c| {
             let cells = vec![
                 Cell::from(Span::raw(format!("{:?}: ", c))),
-                Cell::from(Span::styled("Foreground", Style::default().fg(*c))),
-                Cell::from(Span::styled("Background", Style::default().bg(*c))),
+                Cell::from(Span::styled("Foreground", Style::DEFAULT.fg(*c))),
+                Cell::from(Span::styled("Background", Style::DEFAULT.bg(*c))),
             ];
             Row::new(cells)
         })

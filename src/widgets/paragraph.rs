@@ -31,14 +31,14 @@ fn get_line_offset(line_width: u16, text_area_width: u16, alignment: Alignment) 
 /// let text = vec![
 ///     Spans::from(vec![
 ///         Span::raw("First"),
-///         Span::styled("line",Style::default().add_modifier(Modifier::ITALIC)),
+///         Span::styled("line",Style::DEFAULT.add_modifier(Modifier::ITALIC)),
 ///         Span::raw("."),
 ///     ]),
-///     Spans::from(Span::styled("Second line", Style::default().fg(Color::Red))),
+///     Spans::from(Span::styled("Second line", Style::DEFAULT.fg(Color::Red))),
 /// ];
 /// Paragraph::new(text)
 ///     .block(Block::default().title("Paragraph").borders(Borders::ALL))
-///     .style(Style::default().fg(Color::White).bg(Color::Black))
+///     .style(Style::DEFAULT.fg(Color::White).bg(Color::Black))
 ///     .alignment(Alignment::Center)
 ///     .wrap(Wrap { trim: true });
 /// ```
@@ -98,7 +98,7 @@ impl<'a> Paragraph<'a> {
     {
         Paragraph {
             block: None,
-            style: Default::default(),
+            style: Style::DEFAULT,
             wrap: None,
             text: text.into(),
             scroll: (0, 0),

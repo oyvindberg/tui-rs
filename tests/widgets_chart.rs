@@ -39,7 +39,7 @@ fn widgets_chart_can_render_on_small_areas() {
             .draw(|f| {
                 let datasets = vec![Dataset::default()
                     .marker(symbols::Marker::Braille)
-                    .style(Style::default().fg(Color::Magenta))
+                    .style(Style::DEFAULT.fg(Color::Magenta))
                     .data(&[(0.0, 0.0)])];
                 let chart = Chart::new(datasets)
                     .block(Block::default().title("Plot").borders(Borders::ALL))
@@ -264,7 +264,7 @@ fn widgets_chart_can_have_axis_with_zero_length_bounds() {
         .draw(|f| {
             let datasets = vec![Dataset::default()
                 .marker(symbols::Marker::Braille)
-                .style(Style::default().fg(Color::Magenta))
+                .style(Style::DEFAULT.fg(Color::Magenta))
                 .data(&[(0.0, 0.0)])];
             let chart = Chart::new(datasets)
                 .block(Block::default().title("Plot").borders(Borders::ALL))
@@ -300,7 +300,7 @@ fn widgets_chart_handles_overflows() {
         .draw(|f| {
             let datasets = vec![Dataset::default()
                 .marker(symbols::Marker::Braille)
-                .style(Style::default().fg(Color::Magenta))
+                .style(Style::DEFAULT.fg(Color::Magenta))
                 .data(&[
                     (1_588_298_471.0, 1.0),
                     (1_588_298_473.0, 0.0),
@@ -377,7 +377,7 @@ fn widgets_chart_can_have_a_legend() {
             let datasets = vec![
                 Dataset::default()
                     .name("Dataset 1")
-                    .style(Style::default().fg(Color::Blue))
+                    .style(Style::DEFAULT.fg(Color::Blue))
                     .data(&[
                         (0.0, 0.0),
                         (10.0, 1.0),
@@ -394,7 +394,7 @@ fn widgets_chart_can_have_a_legend() {
                     .graph_type(Line),
                 Dataset::default()
                     .name("Dataset 2")
-                    .style(Style::default().fg(Color::Green))
+                    .style(Style::DEFAULT.fg(Color::Green))
                     .data(&[
                         (0.0, 10.0),
                         (10.0, 9.0),
@@ -411,12 +411,12 @@ fn widgets_chart_can_have_a_legend() {
                     .graph_type(Line),
             ];
             let chart = Chart::new(datasets)
-                .style(Style::default().bg(Color::White))
+                .style(Style::DEFAULT.bg(Color::White))
                 .block(Block::default().title("Chart Test").borders(Borders::ALL))
                 .x_axis(
                     Axis::default()
                         .bounds([0.0, 100.0])
-                        .title(Span::styled("X Axis", Style::default().fg(Color::Yellow)))
+                        .title(Span::styled("X Axis", Style::DEFAULT.fg(Color::Yellow)))
                         .labels(create_labels(&["0.0", "50.0", "100.0"])),
                 )
                 .y_axis(

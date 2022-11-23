@@ -22,7 +22,7 @@ fn widgets_canvas_draw_labels() {
                     ctx.print(
                         0.0,
                         0.0,
-                        Span::styled(label.clone(), Style::default().fg(Color::Blue)),
+                        Span::styled(label.clone(), Style::DEFAULT.fg(Color::Blue)),
                     );
                 });
             f.render_widget(canvas, f.size());

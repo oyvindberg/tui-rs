@@ -21,7 +21,7 @@ use unicode_width::UnicodeWidthStr;
 ///
 /// Cell::from(Spans::from(vec![
 ///     Span::raw("a vec of "),
-///     Span::styled("spans", Style::default().add_modifier(Modifier::BOLD))
+///     Span::styled("spans", Style::DEFAULT.add_modifier(Modifier::BOLD))
 /// ]));
 ///
 /// Cell::from(Text::from("a text"));
@@ -31,7 +31,7 @@ use unicode_width::UnicodeWidthStr;
 ///
 /// You can apply a [`Style`] on the entire [`Cell`] using [`Cell::style`] or rely on the styling
 /// capabilities of [`Text`].
-#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Cell<'a> {
     content: Text<'a>,
     style: Style,
@@ -52,7 +52,7 @@ where
     fn from(content: T) -> Cell<'a> {
         Cell {
             content: content.into(),
-            style: Style::default(),
+            style: Style::DEFAULT,
         }
     }
 }
@@ -71,7 +71,7 @@ where
 /// # use tui::style::{Style, Color};
 /// Row::new(vec![
 ///     Cell::from("Cell1"),
-///     Cell::from("Cell2").style(Style::default().fg(Color::Yellow)),
+///     Cell::from("Cell2").style(Style::DEFAULT.fg(Color::Yellow)),
 /// ]);
 /// ```
 ///
@@ -86,7 +86,7 @@ where
 /// ```
 ///
 /// By default, a row has a height of 1 but you can change this using [`Row::height`].
-#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Row<'a> {
     cells: Vec<Cell<'a>>,
     height: u16,
@@ -104,7 +104,7 @@ impl<'a> Row<'a> {
         Self {
             height: 1,
             cells: cells.into_iter().map(|c| c.into()).collect(),
-            style: Style::default(),
+            style: Style::DEFAULT,
             bottom_margin: 0,
         }
     }
@@ -147,14 +147,14 @@ impl<'a> Row<'a> {
 ///     // Row can be created from simple strings.
 ///     Row::new(vec!["Row11", "Row12", "Row13"]),
 ///     // You can style the entire row.
-///     Row::new(vec!["Row21", "Row22", "Row23"]).style(Style::default().fg(Color::Blue)),
+///     Row::new(vec!["Row21", "Row22", "Row23"]).style(Style::DEFAULT.fg(Color::Blue)),
 ///     // If you need more control over the styling you may need to create Cells directly
 ///     Row::new(vec![
 ///         Cell::from("Row31"),
-///         Cell::from("Row32").style(Style::default().fg(Color::Yellow)),
+///         Cell::from("Row32").style(Style::DEFAULT.fg(Color::Yellow)),
 ///         Cell::from(Spans::from(vec![
 ///             Span::raw("Row"),
-///             Span::styled("33", Style::default().fg(Color::Green))
+///             Span::styled("33", Style::DEFAULT.fg(Color::Green))
 ///         ])),
 ///     ]),
 ///     // If a Row need to display some content over multiple lines, you just have to change
@@ -166,11 +166,11 @@ impl<'a> Row<'a> {
 ///     ]).height(2),
 /// ])
 /// // You can set the style of the entire Table.
-/// .style(Style::default().fg(Color::White))
+/// .style(Style::DEFAULT.fg(Color::White))
 /// // It has an optional header, which is simply a Row always visible at the top.
 /// .header(
 ///     Row::new(vec!["Col1", "Col2", "Col3"])
-///         .style(Style::default().fg(Color::Yellow))
+///         .style(Style::DEFAULT.fg(Color::Yellow))
 ///         // If you want some space between the header and the rest of the rows, you can always
 ///         // specify some margin at the bottom.
 ///         .bottom_margin(1)
@@ -182,7 +182,7 @@ impl<'a> Row<'a> {
 /// // ...and they can be separated by a fixed spacing.
 /// .column_spacing(1)
 /// // If you wish to highlight a row in any specific way when it is selected...
-/// .highlight_style(Style::default().add_modifier(Modifier::BOLD))
+/// .highlight_style(Style::DEFAULT.add_modifier(Modifier::BOLD))
 /// // ...and potentially show a symbol in front of the selection.
 /// .highlight_symbol(">>");
 /// ```
@@ -213,10 +213,10 @@ impl<'a> Table<'a> {
     {
         Self {
             block: None,
-            style: Style::default(),
+            style: Style::DEFAULT,
             widths: &[],
             column_spacing: 1,
-            highlight_style: Style::default(),
+            highlight_style: Style::DEFAULT,
             highlight_symbol: None,
             header: None,
             rows: rows.into_iter().collect(),

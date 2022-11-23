@@ -37,9 +37,9 @@ impl BorderType {
 /// Block::default()
 ///     .title("Block")
 ///     .borders(Borders::LEFT | Borders::RIGHT)
-///     .border_style(Style::default().fg(Color::White))
+///     .border_style(Style::DEFAULT.fg(Color::White))
 ///     .border_type(BorderType::Rounded)
-///     .style(Style::default().bg(Color::Black));
+///     .style(Style::DEFAULT.bg(Color::Black));
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Block<'a> {
@@ -65,9 +65,9 @@ impl<'a> Default for Block<'a> {
             title: None,
             title_alignment: Alignment::Left,
             borders: Borders::NONE,
-            border_style: Default::default(),
+            border_style: Style::DEFAULT,
             border_type: BorderType::Plain,
-            style: Default::default(),
+            style: Style::DEFAULT,
         }
     }
 }
