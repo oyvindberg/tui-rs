@@ -58,7 +58,7 @@ case class Block(
     border_type: BorderType = BorderType.Plain,
     /// Widget style
     style: Style = Style.DEFAULT
-) {
+) extends Widget {
   /// Compute the inner area of a block based on its border visibility rules.
   def inner(area: Rect): Rect = {
     var inner = area;
