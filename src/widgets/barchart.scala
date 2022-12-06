@@ -50,7 +50,7 @@ case class BarChart(
     max: Option[Int] = None
 ) extends Widget {
   /// Values to display on the bar (computed when the data is passed to the widget)
-  private lazy val values: Array[Grapheme] = data.collect { case (str, _) => Grapheme(str) }
+  private lazy val values: Array[Grapheme] = data.collect { case (_, v) => Grapheme(v.toString) }
 
   override def render(area: Rect, buf: Buffer): Unit = {
     buf.set_style(area, style);
