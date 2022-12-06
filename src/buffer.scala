@@ -102,6 +102,11 @@ case class Buffer(
     val i = this.index_of(x, y)
     content(i)
   }
+  /// Returns a reference to Cell at the given coordinates
+  def set(x: Int, y: Int, cell: Cell): Unit = {
+    val i = this.index_of(x, y)
+    content(i) = cell
+  }
 
   /// Returns the index in the Vec<Cell> for the given global (x, y) coordinates.
   ///
