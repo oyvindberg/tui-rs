@@ -188,7 +188,7 @@ object App {
     val chunks = Layout(
       direction = Direction.Horizontal,
       constraints = Array(Constraint.Percentage(50), Constraint.Percentage(50))
-    ).split(f.size());
+    ).split(f.size);
 
     // Iterate through all elements in the `items` app and append some debug text to it.
     val items0 = app.items.items

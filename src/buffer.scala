@@ -2,6 +2,7 @@ package tui
 package buffer
 
 import tui.Style
+import tui.breakableForeach._
 import tui.layout.Rect
 import tui.text.{Span, Spans}
 
@@ -104,6 +105,9 @@ case class Buffer(
   }
   /// Returns a reference to Cell at the given coordinates
   def set(x: Int, y: Int, cell: Cell): Unit = {
+    if (x == 0 && y == 0) {
+      print(1)
+    }
     val i = this.index_of(x, y)
     content(i) = cell
   }
@@ -203,24 +207,23 @@ case class Buffer(
     val graphemes = UnicodeSegmentation.graphemes(string, true)
     val max_offset = math.min(this.area.right, width + x)
 
-    graphemes.foreach { s =>
-      val width = s.width
-      if (width != 0) {
-        // `x_offset + width > max_offset` could be integer overflow on 32-bit machines if we
-        // change dimenstions to usize or u32 and someone resizes the terminal to 1x2^32.
-        if (width > max_offset - x_offset) {
-          () // break
-        } else {
-          content(index).set_symbol(s)
-          content(index).set_style(style)
+    graphemes.breakableForeach { case (s, _) =>
+      if (s.width == 0) breakableForeach.Continue
+      // `x_offset + width > max_offset` could be integer overflow on 32-bit machines if we
+      // change dimenstions to usize or u32 and someone resizes the terminal to 1x2^32.
+      else if (s.width > max_offset - x_offset) {
+        breakableForeach.Break
+      } else {
+        content(index).set_symbol(s).set_style(style)
 
-          // Reset following cells if multi-width (they would be hidden by the grapheme),
-          Range(index + 1, index + width).foreach(i => content(i).reset())
-          index += width
-          x_offset += width
-        }
+        // Reset following cells if multi-width (they would be hidden by the grapheme),
+        ranges.range(index + 1, index + s.width) {i => content(i).reset()}
+        index += s.width
+        x_offset += s.width
+        breakableForeach.Continue
       }
     }
+
     (x_offset, y)
   }
 
@@ -265,7 +268,7 @@ case class Buffer(
   }
 
   /// Reset all cells in the buffer
-  def reset() =
+  def reset(): Unit =
     content.foreach(_.reset())
 
   /// Merge an other buffer into this one

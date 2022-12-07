@@ -40,7 +40,9 @@ case class TerminalOptions(
 
 /// Represents a consistent terminal interface for rendering.
 case class Frame(
-    terminal: Terminal,
+    buffer: Buffer,
+    /// Terminal size, guaranteed not to change when rendering.
+    size: Rect,
 
     /// Where should the cursor be after drawing this frame?
     ///
@@ -48,9 +50,6 @@ case class Frame(
     /// y))`, the cursor is shown and placed at `(x, y)` after the call to `Terminal::draw()`.
     var cursor_position: Option[(Int, Int)]
 ) {
-  /// Terminal size, guaranteed not to change when rendering.
-  def size(): Rect =
-    terminal.viewport.area
 
   /// Render a [`Widget`] to the current buffer using [`Widget::render`].
   ///
@@ -68,8 +67,8 @@ case class Frame(
   /// let mut frame = terminal.get_frame();
   /// frame.render_widget(block, area);
   /// ```
-  def render_widget(widget: Widget, area: Rect) =
-    widget.render(area, terminal.current_buffer_mut());
+  def render_widget(widget: Widget, area: Rect): Unit =
+    widget.render(area, buffer);
 
   /// Render a [`StatefulWidget`] to the current buffer using [`StatefulWidget::render`].
   ///
@@ -96,8 +95,8 @@ case class Frame(
   /// let mut frame = terminal.get_frame();
   /// frame.render_stateful_widget(list, area, &mut state);
   /// ```
-  def render_stateful_widget[W <: StatefulWidget](widget: W, area: Rect)(state: widget.State) =
-    widget.render(area, terminal.current_buffer_mut(), state);
+  def render_stateful_widget[W <: StatefulWidget](widget: W, area: Rect)(state: widget.State): Unit =
+    widget.render(area, buffer, state);
 
   /// After drawing this frame, make the cursor visible and put it at the specified (x, y)
   /// coordinates. If this method is not called, the cursor will be hidden.
@@ -105,7 +104,7 @@ case class Frame(
   /// Note that this will interfere with calls to `Terminal::hide_cursor()`,
   /// `Terminal::show_cursor()`, and `Terminal::set_cursor()`. Pick one of the APIs and stick
   /// with it.
-  def set_cursor(x: Int, y: Int) =
+  def set_cursor(x: Int, y: Int): Unit =
     cursor_position = Some((x, y));
 }
 
@@ -144,7 +143,8 @@ case class Terminal private (
   /// Get a Frame object which provides a consistent view into the terminal state for rendering.
   def get_frame(): Frame =
     Frame(
-      terminal = this,
+      buffer = current_buffer_mut(),
+      size = viewport.area,
       cursor_position = None
     )
 

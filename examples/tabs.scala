@@ -69,15 +69,14 @@ object Main {
     }
 
   def ui(f: Frame, app: App): Unit = {
-    val size = f.size();
     val chunks = Layout(
       direction = Direction.Vertical,
       margin = Margin(5, 5),
       constraints = Array(Constraint.Length(3), Constraint.Min(0))
-    ).split(size);
+    ).split(f.size);
 
     val block = Block(style = Style(bg = Some(Color.White), fg = Some(Color.Black)))
-    f.render_widget(block, size);
+    f.render_widget(block, f.size);
     val titles = app.titles
       .map { t =>
         val (first, rest) = t.splitAt(1);

@@ -120,7 +120,7 @@ object Main {
       direction = Direction.Vertical,
       margin = Margin(2, 2),
       constraints = Array(Constraint.Length(3), Constraint.Length(3), Constraint.Length(7), Constraint.Min(0))
-    ).split(f.size());
+    ).split(f.size);
 
     val sparkline0 = Sparkline(
       block = Some(

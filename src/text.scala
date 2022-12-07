@@ -311,4 +311,6 @@ object Text {
 
   def from(span: Span): Text =
     Text(lines = Array(Spans.from(span)))
+  def from(spans: Spans): Text =
+    Text(lines = Array(spans))
 }

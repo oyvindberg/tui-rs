@@ -83,20 +83,18 @@ object App {
   }
 
   def ui(f: Frame, app: App): Unit = {
-    val size = f.size()
-
     // Words made "loooong" to demonstrate line breaking.
     val s = "Veeeeeeeeeeeeeeeery    loooooooooooooooooong   striiiiiiiiiiiiiiiiiiiiiiiiiing.   "
-    val long_line = s.repeat(size.width / s.length + 4) + "\n"
+    val long_line = s.repeat(f.size.width / s.length + 4) + "\n"
 
     val block = Block(style = Style(bg = Some(Color.White), fg = Some(Color.Black)))
-    f.render_widget(block, size)
+    f.render_widget(block, f.size)
 
     val chunks = Layout(
       direction = Direction.Vertical,
       margin = Margin(5),
       constraints = Array(Constraint.Percentage(25), Constraint.Percentage(25), Constraint.Percentage(25), Constraint.Percentage(25))
-    ).split(size)
+    ).split(f.size)
 
     val text = Array(
       Spans.from("This is a line "),

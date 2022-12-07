@@ -88,7 +88,7 @@ object Main {
         direction = Direction.Vertical,
         margin = Margin(2, 2),
         constraints = Array(Constraint.Percentage(50), Constraint.Percentage(50)),
-      ).split(f.size())
+      ).split(f.size)
 
       val barchart1 = BarChart(
         block = Some(Block(title = Some(Spans.from("Data1")), borders = Borders.ALL)),
