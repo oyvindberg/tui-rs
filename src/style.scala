@@ -1,6 +1,5 @@
 package tui
 
-import scala.collection.{mutable, BitSet}
 //! `style` contains the primitives used to control how your user interface will look.
 
 //#[derive(Debug, Clone, Copy, PartialEq, Eq)]

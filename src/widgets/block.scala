@@ -1,14 +1,13 @@
 package tui
 package widgets
 
+import tui.Style
 import tui.buffer.Buffer
 import tui.layout.{Alignment, Rect}
-import tui.Style
-import tui.symbols.line
-import tui.text.{Span, Spans}
-import tui.widgets.{Borders, Widget}
 import tui.ranges._
 import tui.saturating._
+import tui.symbols.line
+import tui.text.Spans
 
 //#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 sealed trait BorderType
@@ -97,6 +96,7 @@ case class Block(
           .get(area.left, y)
           .set_symbol(symbols.vertical)
           .set_style(border_style);
+        ()
       }
     }
 
@@ -106,6 +106,7 @@ case class Block(
           .get(x, area.top)
           .set_symbol(symbols.horizontal)
           .set_style(border_style)
+        ()
       }
     }
     if (borders.intersects(Borders.RIGHT)) {
@@ -115,6 +116,7 @@ case class Block(
           .get(x, y)
           .set_symbol(symbols.vertical)
           .set_style(border_style)
+        ()
       }
     }
     if (borders.intersects(Borders.BOTTOM)) {
@@ -124,6 +126,7 @@ case class Block(
           .get(x, y)
           .set_symbol(symbols.horizontal)
           .set_style(border_style)
+        ()
       }
     }
 

@@ -194,10 +194,9 @@ object reflow {
     var offset = offset0
     var start = 0
     // todo: the only usage of trim_offset unpacks `src` from a Grapheme, so this is likely unnecessary
-    UnicodeSegmentation.graphemes(src, true).breakableForeach { c =>
-      var w = c.width
-      if (w <= offset) {
-        offset -= w
+    UnicodeSegmentation.graphemes(src, true).breakableForeach { (c, _) =>
+      if (c.width <= offset) {
+        offset -= c.width
         start += c.str.length
         breakableForeach.Continue
       } else {

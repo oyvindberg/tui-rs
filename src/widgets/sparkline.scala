@@ -2,9 +2,7 @@ package tui.widgets
 
 import tui.buffer.Buffer
 import tui.layout.Rect
-import tui.{ranges, symbols, Style}
-
-import scala.Console.in
+import tui.{Style, ranges, symbols}
 
 /// Widget to render a sparkline over one or more lines.
 ///

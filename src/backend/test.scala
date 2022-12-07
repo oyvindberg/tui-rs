@@ -13,7 +13,7 @@ object test {
     val view = new StringBuilder(buffer.content.length + buffer.area.height * 3);
     val value: Iterator[mutable.ArraySeq[Cell]] = buffer.content.grouped(buffer.area.width)
     value.foreach { cells =>
-      val overwritten = mutable.ArrayBuffer.empty[Unit]
+      val overwritten = mutable.ArrayBuffer.empty[(Int, String)]
       var skip: Int = 0;
       view.append('"');
       cells.zipWithIndex.foreach { case (c, x) =>

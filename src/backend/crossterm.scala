@@ -2,7 +2,7 @@ package tui
 package backend
 
 import tui.buffer.Cell
-import tui.crossterm.{Attribute, CrosstermJni, Xy}
+import tui.crossterm.{Attribute, CrosstermJni}
 import tui.layout.Rect
 
 class CrosstermBackend(buffer: CrosstermJni) extends Backend {

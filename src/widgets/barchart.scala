@@ -1,11 +1,9 @@
 package tui
 package widgets
 
+import tui.{Grapheme, Style}
 import tui.buffer.Buffer
 import tui.layout.Rect
-import tui.Style
-import tui.{symbols, Grapheme}
-import tui.widgets.{Block, Widget}
 import tui.ranges._
 
 /// Display multiple bars in a single widgets
