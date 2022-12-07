@@ -19,14 +19,7 @@ case class ListState(
   }
 }
 
-case class ListItem(
-    content: Text,
-    var style: Style = Style.DEFAULT
-) {
-  def style(style: Style): this.type = {
-    this.style = style
-    this
-  }
+case class ListItem(content: Text, style: Style = Style.DEFAULT) {
   def height: Int = content.height
 }
 
