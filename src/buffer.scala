@@ -105,9 +105,6 @@ case class Buffer(
   }
   /// Returns a reference to Cell at the given coordinates
   def set(x: Int, y: Int, cell: Cell): Unit = {
-    if (x == 0 && y == 0) {
-      print(1)
-    }
     val i = this.index_of(x, y)
     content(i) = cell
   }
