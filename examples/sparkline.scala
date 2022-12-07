@@ -70,7 +70,7 @@ object Main {
     // create app and run it
     val tick_rate = Duration.ofMillis(250);
     val app = App()
-    run_app(terminal, app, tick_rate, jni);
+    run_app(terminal, app, tick_rate, jni, args.contains("--once"));
 
     // restore terminal
     jni.disableRawMode();
@@ -84,7 +84,8 @@ object Main {
       terminal: Terminal,
       app: App,
       tick_rate: Duration,
-      jni: tui.crossterm.CrosstermJni
+      jni: tui.crossterm.CrosstermJni,
+      once: Boolean,
   ): Unit = {
     var last_tick = Instant.now();
 
@@ -98,6 +99,9 @@ object Main {
     while (true) {
       terminal.draw(f => ui(f, app));
 
+      if (once) {
+        return
+      }
       if (jni.poll(timeout)) {
         jni.read() match {
           case key: tui.crossterm.Event.Key =>
