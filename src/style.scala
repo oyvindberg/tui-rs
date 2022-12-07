@@ -324,17 +324,13 @@ case class Style(
   ///     Style::DEFAULT.patch(style_1).patch(style_2),
   ///     Style::DEFAULT.patch(combined));
   /// ```
-  def patch(other: Style): Style = {
-    fg = other.fg.orElse(this.fg);
-    bg = other.bg.orElse(this.bg);
-
-    add_modifier.remove(other.sub_modifier);
-    add_modifier.insert(other.add_modifier);
-    sub_modifier.remove(other.add_modifier);
-    sub_modifier.insert(other.sub_modifier);
-
-    this
-  }
+  def patch(other: Style): Style =
+    Style(
+      fg = other.fg.orElse(this.fg),
+      bg = other.bg.orElse(this.bg),
+      add_modifier = add_modifier.remove(other.sub_modifier).insert(other.add_modifier),
+      sub_modifier = sub_modifier.remove(other.add_modifier).insert(other.sub_modifier)
+    )
 }
 
 object Style {
