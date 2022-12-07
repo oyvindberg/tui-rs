@@ -64,7 +64,7 @@ case class StyledGrapheme(
 //#[derive(Debug, Clone, PartialEq, Eq)]
 case class Span(
     content: String,
-    var style: Style
+    style: Style
 ) {
   /// Returns the width of the content held by this span.
   def width: Int = content.length
@@ -271,11 +271,10 @@ case class Text(var lines: Array[Spans]) {
   /// raw_text.patch_style(style);
   /// assert_eq!(raw_text, styled_text);
   /// ```
-  def patch_style(style: Style) =
-    for {
-      line <- lines
-      span <- line.spans
-    } span.style = span.style.patch(style)
+  def patch_style(style: Style): Text = {
+    val newLines = lines.map { case Spans(spans) => Spans(spans.map(span => span.copy(style = span.style.patch(style)))) }
+    Text(newLines)
+  }
 }
 
 object Text {
