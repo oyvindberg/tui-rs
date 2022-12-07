@@ -149,13 +149,13 @@ case class Modifier(bits: Int) {
 
   /// Removes the specified flags in-place.
   def remove(other: Modifier): Modifier =
-    copy(bits = bits & Integer.reverse(other.bits))
+    copy(bits = bits & ~other.bits)
 
   def |(mod: Modifier): Modifier =
-    copy(bits = bits | mod.bits)
+    insert(mod)
 
   def -(mod: Modifier): Modifier =
-    copy(bits = bits & Integer.reverse(mod.bits))
+    remove(mod)
 }
 
 object Modifier {
