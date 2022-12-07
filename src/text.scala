@@ -1,6 +1,8 @@
 package tui
 package text
 
+import tui.internal.UnicodeSegmentation
+
 import scala.collection.Factory
 import scala.jdk.StreamConverters.StreamHasToScala
 

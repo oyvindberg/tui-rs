@@ -4,6 +4,7 @@ package list
 
 import tui.backend.CrosstermBackend
 import tui.crossterm.CrosstermJni
+import tui.internal.ranges
 import tui.layout.{Constraint, Corner, Direction, Layout}
 import tui.terminal.{Frame, Terminal}
 import tui.text.{Span, Spans, Text}

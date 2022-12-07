@@ -1,8 +1,8 @@
 package tui
 package widgets
 
-import tui.UnicodeSegmentation
-import tui.breakableForeach.{BreakableForeachArray, BreakableForeachIterator}
+import tui.internal.breakableForeach._
+import tui.internal.{breakableForeach, UnicodeSegmentation}
 import tui.text.StyledGrapheme
 
 import scala.collection.mutable

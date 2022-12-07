@@ -1,10 +1,11 @@
 package tui
 package layout
 
+import tui.cassowary.Strength.{REQUIRED, WEAK}
 import tui.cassowary.WeightedRelation._
 import tui.cassowary.operators._
-import tui.cassowary.Strength.{REQUIRED, WEAK}
 import tui.cassowary.{Constraint => CassowaryConstraint, Expression, Solver, Variable}
+import tui.internal.ranges
 import tui.layout.Layout.LAYOUT_CACHE
 
 import scala.collection.mutable
@@ -129,7 +130,7 @@ object Layout {
       case Direction.Horizontal =>
         elements.sliding(2).foreach {
           case Array(one, two) => ccs += ((one.x + one.width) | EQ(REQUIRED) | two.x);
-          case Array(_) => // ignore if only one
+          case Array(_)        => // ignore if only one
         }
 
         ranges.range(0, layout.constraints.length) { i =>

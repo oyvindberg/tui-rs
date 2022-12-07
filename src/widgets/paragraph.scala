@@ -2,8 +2,8 @@ package tui
 package widgets
 
 import tui.buffer.Buffer
+import tui.internal.saturating._
 import tui.layout.{Alignment, Rect}
-import tui.saturating.IntOps
 import tui.text.{Span, Spans, StyledGrapheme, Text}
 import tui.widgets.reflow.{LineComposer, LineTruncator, WordWrapper}
 

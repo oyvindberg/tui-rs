@@ -1,8 +1,8 @@
 package tui
 package buffer
 
-import tui.Style
-import tui.breakableForeach._
+import tui.internal.breakableForeach._
+import tui.internal._
 import tui.layout.Rect
 import tui.text.{Span, Spans}
 
@@ -11,7 +11,7 @@ import scala.collection.mutable
 /// A buffer cell
 //#[derive(Debug, Clone, PartialEq, Eq)]
 case class Cell(
-    var symbol: Grapheme,
+    var symbol: tui.Grapheme,
     var fg: Color,
     var bg: Color,
     var modifier: Modifier
@@ -22,7 +22,7 @@ case class Cell(
   def set_symbol(symbol: String): this.type =
     set_symbol(Grapheme(symbol))
 
-  def set_symbol(symbol: Grapheme): this.type = {
+  def set_symbol(symbol: tui.Grapheme): this.type = {
     this.symbol = symbol
     this
   }
@@ -217,7 +217,7 @@ case class Buffer(
         content(index).set_symbol(s).set_style(style)
 
         // Reset following cells if multi-width (they would be hidden by the grapheme),
-        ranges.range(index + 1, index + s.width) {i => content(i).reset()}
+        ranges.range(index + 1, index + s.width)(i => content(i).reset())
         index += s.width
         x_offset += s.width
         breakableForeach.Continue

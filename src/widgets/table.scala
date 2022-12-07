@@ -1,11 +1,12 @@
 package tui
 package widgets
 
-import tui.breakableForeach.BreakableForeachArray
 import tui.buffer.Buffer
+import tui.internal.breakableForeach.BreakableForeachArray
+import tui.internal.saturating.IntOps
+import tui.internal.stepBy.StepBySyntax
+import tui.internal.breakableForeach
 import tui.layout.{Constraint, Direction, Layout, Rect}
-import tui.saturating.IntOps
-import tui.stepBy.StepBySyntax
 import tui.text.Text
 
 import scala.collection.mutable

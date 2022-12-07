@@ -3,8 +3,8 @@ package widgets
 
 import tui.{Grapheme, Style}
 import tui.buffer.Buffer
+import tui.internal.ranges._
 import tui.layout.Rect
-import tui.ranges._
 
 /// Display multiple bars in a single widgets
 ///

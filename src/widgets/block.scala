@@ -3,9 +3,9 @@ package widgets
 
 import tui.Style
 import tui.buffer.Buffer
+import tui.internal.ranges._
+import tui.internal.saturating._
 import tui.layout.{Alignment, Rect}
-import tui.ranges._
-import tui.saturating._
 import tui.symbols.line
 import tui.text.Spans
 
