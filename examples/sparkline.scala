@@ -85,7 +85,7 @@ object Main {
       app: App,
       tick_rate: Duration,
       jni: tui.crossterm.CrosstermJni,
-      once: Boolean,
+      once: Boolean
   ): Unit = {
     var last_tick = Instant.now();
 
