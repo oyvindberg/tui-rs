@@ -3,7 +3,7 @@ package examples
 package tabs
 
 import tui.backend.CrosstermBackend
-import tui.crossterm.CrosstermJni
+import tui.crossterm.{Command, CrosstermJni}
 import tui.layout.{Constraint, Direction, Layout, Margin}
 import tui.terminal.{Frame, Terminal}
 import tui.text.{Span, Spans}
@@ -31,9 +31,7 @@ object Main {
     val jni = new CrosstermJni
     // setup terminal
     jni.enableRawMode();
-    jni.enqueueTerminalEnterAlternateScreen()
-    jni.enqueueEventEnableMouseCapture()
-    jni.flush()
+    jni.execute(new Command.EnterAlternateScreen(), new Command.EnableMouseCapture())
 
     val backend = CrosstermBackend(jni)
     val terminal = Terminal.init(backend)
@@ -45,11 +43,8 @@ object Main {
     // restore terminal
     // restore terminal
     jni.disableRawMode()
-    jni.enqueueTerminalLeaveAlternateScreen()
-    jni.enqueueEventDisableMouseCapture()
-    jni.flush()
+    jni.execute(new Command.LeaveAlternateScreen(), new Command.DisableMouseCapture())
     backend.show_cursor()
-
   }
 
   def run_app(terminal: Terminal, app: App, jni: CrosstermJni): Unit =

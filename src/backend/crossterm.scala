@@ -2,8 +2,10 @@ package tui
 package backend
 
 import tui.buffer.Cell
-import tui.crossterm.{Attribute, CrosstermJni}
+import tui.crossterm.{Attribute, Command, CrosstermJni}
 import tui.layout.Rect
+
+import java.util
 
 class CrosstermBackend(buffer: CrosstermJni) extends Backend {
   override def flush(): Unit =
@@ -14,42 +16,46 @@ class CrosstermBackend(buffer: CrosstermJni) extends Backend {
     var bg: Color = Color.Reset;
     var modifier = Modifier.EMPTY;
     var last_pos: Option[(Int, Int)] = None;
+    val commands = new util.ArrayList[Command]()
+
     content.foreach { case (x, y, cell) =>
       // Move the cursor if the previous location was not (x - 1, y)
       def shouldMove = last_pos match {
         case Some((lastX, lastY)) if x == lastX + 1 && y == lastY => false
         case _                                                    => true
       }
-      if (shouldMove) { buffer.enqueueCursorMoveTo(x, y) }
+      if (shouldMove) { commands.add(new Command.MoveTo(x, y)) }
       last_pos = Some((x, y));
 
       if (cell.modifier != modifier) {
         val diff = ModifierDiff(from = modifier, to = cell.modifier)
-        diff.queue(buffer)
+        diff.queue(commands)
         modifier = cell.modifier;
       }
       if (cell.fg != fg) {
         val color = CrosstermBackend.from(cell.fg);
-        buffer.enqueueStyleSetForegroundColor(color)
+        commands.add(new Command.SetForegroundColor(color))
         fg = cell.fg;
       }
       if (cell.bg != bg) {
         val color = CrosstermBackend.from(cell.bg);
-        buffer.enqueueStyleSetBackgroundColor(color)
+        commands.add(new Command.SetBackgroundColor(color))
         bg = cell.bg;
       }
-      buffer.enqueueStylePrint(cell.symbol.str)
+      commands.add(new Command.Print(cell.symbol.str))
     }
-    buffer.enqueueStyleSetForegroundColor(new crossterm.Color.Reset())
-    buffer.enqueueStyleSetBackgroundColor(new crossterm.Color.Reset())
-    buffer.enqueueStyleSetAttribute(crossterm.Attribute.Reset)
+    commands.add(new Command.SetForegroundColor(new crossterm.Color.Reset()))
+    commands.add(new Command.SetBackgroundColor(new crossterm.Color.Reset()))
+    commands.add(new Command.SetAttribute(crossterm.Attribute.Reset))
+
+    buffer.enqueue(commands)
   }
 
   override def hide_cursor(): Unit =
-    buffer.enqueueCursorHide()
+    buffer.execute(new Command.Hide())
 
   override def show_cursor(): Unit =
-    buffer.enqueueCursorShow()
+    buffer.execute(new Command.Show())
 
   override def get_cursor(): (Int, Int) = {
     val xy = buffer.cursorPosition()
@@ -57,10 +63,10 @@ class CrosstermBackend(buffer: CrosstermJni) extends Backend {
   }
 
   override def set_cursor(x: Int, y: Int): Unit =
-    buffer.enqueueCursorMoveTo(x, y)
+    buffer.execute(new Command.MoveTo(x, y))
 
   override def clear(): Unit =
-    buffer.enqueueTerminalClear(crossterm.ClearType.All)
+    buffer.execute(new Command.Clear(crossterm.ClearType.All))
 
   override def size(): Rect = {
     val xy = buffer.terminalSize()
@@ -97,57 +103,57 @@ object CrosstermBackend {
 
 //#[derive(Debug)]
 case class ModifierDiff(from: Modifier, to: Modifier) {
-  def queue(w: CrosstermJni): Unit = {
+  def queue(commands: util.ArrayList[Command]): Unit = {
     val removed = from - to;
     if (removed.contains(Modifier.REVERSED)) {
-      w.enqueueStyleSetAttribute(Attribute.NoReverse)
+      commands.add(new Command.SetAttribute(Attribute.NoReverse))
     }
     if (removed.contains(Modifier.BOLD)) {
-      w.enqueueStyleSetAttribute(Attribute.NormalIntensity)
+      commands.add(new Command.SetAttribute(Attribute.NormalIntensity))
       if (to.contains(Modifier.DIM)) {
-        w.enqueueStyleSetAttribute(Attribute.Dim)
+        commands.add(new Command.SetAttribute(Attribute.Dim))
       }
     }
     if (removed.contains(Modifier.ITALIC)) {
-      w.enqueueStyleSetAttribute(Attribute.NoItalic)
+      commands.add(new Command.SetAttribute(Attribute.NoItalic))
     }
     if (removed.contains(Modifier.UNDERLINED)) {
-      w.enqueueStyleSetAttribute(Attribute.NoUnderline)
+      commands.add(new Command.SetAttribute(Attribute.NoUnderline))
     }
     if (removed.contains(Modifier.DIM)) {
-      w.enqueueStyleSetAttribute(Attribute.NormalIntensity)
+      commands.add(new Command.SetAttribute(Attribute.NormalIntensity))
     }
     if (removed.contains(Modifier.CROSSED_OUT)) {
-      w.enqueueStyleSetAttribute(Attribute.NotCrossedOut)
+      commands.add(new Command.SetAttribute(Attribute.NotCrossedOut))
     }
     if (removed.contains(Modifier.SLOW_BLINK) || removed.contains(Modifier.RAPID_BLINK)) {
-      w.enqueueStyleSetAttribute(Attribute.NoBlink)
+      commands.add(new Command.SetAttribute(Attribute.NoBlink))
     }
 
     val added = to - from;
     if (added.contains(Modifier.REVERSED)) {
-      w.enqueueStyleSetAttribute(Attribute.Reverse)
+      commands.add(new Command.SetAttribute(Attribute.Reverse))
     }
     if (added.contains(Modifier.BOLD)) {
-      w.enqueueStyleSetAttribute(Attribute.Bold)
+      commands.add(new Command.SetAttribute(Attribute.Bold))
     }
     if (added.contains(Modifier.ITALIC)) {
-      w.enqueueStyleSetAttribute(Attribute.Italic)
+      commands.add(new Command.SetAttribute(Attribute.Italic))
     }
     if (added.contains(Modifier.UNDERLINED)) {
-      w.enqueueStyleSetAttribute(Attribute.Underlined)
+      commands.add(new Command.SetAttribute(Attribute.Underlined))
     }
     if (added.contains(Modifier.DIM)) {
-      w.enqueueStyleSetAttribute(Attribute.Dim)
+      commands.add(new Command.SetAttribute(Attribute.Dim))
     }
     if (added.contains(Modifier.CROSSED_OUT)) {
-      w.enqueueStyleSetAttribute(Attribute.CrossedOut)
+      commands.add(new Command.SetAttribute(Attribute.CrossedOut))
     }
     if (added.contains(Modifier.SLOW_BLINK)) {
-      w.enqueueStyleSetAttribute(Attribute.SlowBlink)
+      commands.add(new Command.SetAttribute(Attribute.SlowBlink))
     }
     if (added.contains(Modifier.RAPID_BLINK)) {
-      w.enqueueStyleSetAttribute(Attribute.RapidBlink)
+      commands.add(new Command.SetAttribute(Attribute.RapidBlink))
     }
   }
 }
