@@ -50,15 +50,13 @@ case class Sparkline(
       case None    => this.data.maxOption.getOrElse(1)
     };
     val max_index = math.min(spark_area.width, this.data.length);
-    val data = this.data
-      .take(max_index)
-      .map { e =>
-        if (max != 0) {
-          e * spark_area.height * 8 / max
-        } else {
-          0
-        }
+    val data = this.data.take(max_index).map { e =>
+      if (max != 0) {
+        e * spark_area.height * 8 / max
+      } else {
+        0
       }
+    }
 
     ranges.revRange(0, spark_area.height) { j =>
       ranges.range(0, data.length) { i =>

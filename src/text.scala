@@ -229,7 +229,7 @@ object Spans {
 /// assert_eq!(6, text.height());
 /// ```
 //#[derive(Debug, Clone, PartialEq, Default, Eq)]
-case class Text(var lines: Array[Spans]) {
+case class Text(lines: Array[Spans]) {
 
   /// Returns the max width of all the lines.
   ///

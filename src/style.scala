@@ -239,10 +239,10 @@ object Modifier {
 //#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 //#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 case class Style(
-    var fg: Option[Color] = None,
-    var bg: Option[Color] = None,
-    var add_modifier: Modifier = Modifier.EMPTY,
-    var sub_modifier: Modifier = Modifier.EMPTY
+    fg: Option[Color] = None,
+    bg: Option[Color] = None,
+    add_modifier: Modifier = Modifier.EMPTY,
+    sub_modifier: Modifier = Modifier.EMPTY
 ) {
   /// Changes the foreground color.
   ///
