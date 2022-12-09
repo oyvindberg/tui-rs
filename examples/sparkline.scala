@@ -2,8 +2,6 @@ package tui
 package examples
 package sparkline
 
-import tui.backend.CrosstermBackend
-import tui.crossterm.{Command, CrosstermJni}
 import tui.layout.{Constraint, Direction, Layout, Margin}
 import tui.terminal.{Frame, Terminal}
 import tui.text.Spans
@@ -57,23 +55,11 @@ object App {
 }
 
 object Main {
-  def main(args: Array[String]): Unit = {
-    val jni = new CrosstermJni
-    // setup terminal
-    jni.enableRawMode();
-    jni.execute(new Command.EnterAlternateScreen(), new Command.EnableMouseCapture())
-    val backend = CrosstermBackend(jni)
-    val terminal = Terminal.init(backend);
-
+  def main(args: Array[String]): Unit = withTerminal { (jni, terminal) =>
     // create app and run it
     val tick_rate = Duration.ofMillis(250);
     val app = App()
     run_app(terminal, app, tick_rate, jni);
-
-    // restore terminal
-    jni.disableRawMode();
-    jni.execute(new Command.LeaveAlternateScreen(), new Command.DisableMouseCapture())
-    terminal.show_cursor()
   }
 
   def run_app(

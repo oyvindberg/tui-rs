@@ -27,24 +27,10 @@ case class App(
 }
 
 object Main {
-  def main(args: Array[String]): Unit = {
-    val jni = new CrosstermJni
-    // setup terminal
-    jni.enableRawMode();
-    jni.execute(new Command.EnterAlternateScreen(), new Command.EnableMouseCapture())
-
-    val backend = CrosstermBackend(jni)
-    val terminal = Terminal.init(backend)
-
+  def main(args: Array[String]): Unit = withTerminal { (jni, terminal) =>
     // create app and run it
     val app = App(titles = Array("Tab0", "Tab1", "Tab2", "Tab3"));
     run_app(terminal, app, jni);
-
-    // restore terminal
-    // restore terminal
-    jni.disableRawMode()
-    jni.execute(new Command.LeaveAlternateScreen(), new Command.DisableMouseCapture())
-    backend.show_cursor()
   }
 
   def run_app(terminal: Terminal, app: App, jni: CrosstermJni): Unit =

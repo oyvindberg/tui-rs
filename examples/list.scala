@@ -2,8 +2,7 @@ package tui
 package examples
 package list
 
-import tui.backend.CrosstermBackend
-import tui.crossterm.{Command, CrosstermJni}
+import tui.crossterm.CrosstermJni
 import tui.internal.ranges
 import tui.layout.{Constraint, Corner, Direction, Layout}
 import tui.terminal.{Frame, Terminal}
@@ -119,27 +118,12 @@ object App {
     ("Event26", "INFO")
   )
 
-  def main(args: Array[String]): Unit = {
-    val jni = new CrosstermJni
-    // setup terminal
-    jni.enableRawMode()
-    jni.execute(new Command.EnterAlternateScreen(), new Command.EnableMouseCapture())
-
-    val backend = new CrosstermBackend(jni)
-
-    val terminal = Terminal.init(backend)
-
+  def main(args: Array[String]): Unit = withTerminal { (jni, terminal) =>
     // create app and run it
     val tick_rate = Duration.ofMillis(250)
     val app = new App(StatefulList(items = items), events = mutable.ArrayDeque.from(events))
 
     run_app(terminal, app, tick_rate, jni)
-
-    // restore terminal
-    jni.disableRawMode()
-    jni.execute(new Command.LeaveAlternateScreen(), new Command.DisableMouseCapture())
-    backend.show_cursor()
-
   }
 
   def run_app(
