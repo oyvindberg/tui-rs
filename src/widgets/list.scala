@@ -63,7 +63,7 @@ case class List(
     var height = 0
     val it = items.iterator.drop(offset)
     var continue = true
-    while (continue) {
+    while (continue && it.hasNext) {
       val item = it.next()
       if (height + item.height > max_height) {
         continue = false
