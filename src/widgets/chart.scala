@@ -14,7 +14,7 @@ case class Axis(
     /// Title displayed next to axis end
     title: Option[Spans] = None,
     /// Bounds for the axis (all data points outside these limits will not be represented)
-    bounds: (Double, Double) = (0.0, 0.0),
+    bounds: Point = Point.Zero,
     /// A list of labels to put to the left or below the axis
     labels: Option[Array[Span]] = None,
     /// The style used to draw the axis itself
@@ -43,7 +43,7 @@ case class Dataset(
     /// Name of the dataset (used in the legend if shown)
     name: String = "",
     /// A reference to the actual data
-    data: Array[(Double, Double)] = Array.empty,
+    data: Array[Point] = Array.empty,
     /// Symbol used for each points of this dataset
     marker: symbols.Marker = symbols.Marker.Dot,
     /// Determines graph type used for drawing points
@@ -390,7 +390,7 @@ case class Chart(
             case GraphType.Line =>
               dataset.data.sliding(2).foreach {
                 case Array(one, two) =>
-                  val line = Line(x1 = one._1, y1 = one._2, x2 = two._1, y2 = two._2, color = dataset.style.fg.getOrElse(Color.Reset))
+                  val line = Line(x1 = one.x, y1 = one.y, x2 = two.x, y2 = two.y, color = dataset.style.fg.getOrElse(Color.Reset))
                   ctx.draw(line)
                 case _ => ()
               }

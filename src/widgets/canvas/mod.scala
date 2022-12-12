@@ -32,7 +32,7 @@ trait Grid {
 
   def height: Int
 
-  def resolution: (Double, Double)
+  def resolution: Point
 
   def paint(x: Int, y: Int, color: Color): Unit
 
@@ -47,8 +47,8 @@ case class BrailleGrid(
     cells: Array[Int],
     colors: Array[Color]
 ) extends Grid {
-  override def resolution: (Double, Double) =
-    (
+  override def resolution: Point =
+    Point(
       this.width.toDouble * 2.0 - 1.0,
       this.height.toDouble * 4.0 - 1.0
     )
@@ -119,8 +119,8 @@ case class CharGrid(
     cell_char: Char
 ) extends Grid {
 
-  override def resolution: (Double, Double) =
-    (this.width.toDouble - 1.0, this.height.toDouble - 1.0)
+  override def resolution: Point =
+    Point(this.width.toDouble - 1.0, this.height.toDouble - 1.0)
 
   override def save(): Layer =
     Layer(
@@ -150,7 +150,7 @@ case class CharGrid(
 
 case class Painter(
     context: Context,
-    resolution: (Double, Double)
+    resolution: Point
 ) {
   /// Convert the (x, y) coordinates to location of a point on the grid
   ///
@@ -172,20 +172,20 @@ case class Painter(
   /// assert_eq!(point, Some((0, 0)));
   /// ```
   def get_point(x: Double, y: Double): Option[(Int, Int)] = {
-    val left = this.context.x_bounds._1
-    val right = this.context.x_bounds._2
-    val top = this.context.y_bounds._2
-    val bottom = this.context.y_bounds._1
+    val left = this.context.x_bounds.x
+    val right = this.context.x_bounds.y
+    val top = this.context.y_bounds.y
+    val bottom = this.context.y_bounds.x
     if (x < left || x > right || y < bottom || y > top) {
       return None
     }
-    val width = math.abs(this.context.x_bounds._2 - this.context.x_bounds._1)
-    val height = math.abs(this.context.y_bounds._2 - this.context.y_bounds._1)
+    val width = math.abs(this.context.x_bounds.y - this.context.x_bounds.x)
+    val height = math.abs(this.context.y_bounds.y - this.context.y_bounds.x)
     if (width == 0.0 || height == 0.0) {
       return None
     }
-    val x0 = ((x - left) * this.resolution._1 / width).toInt
-    val y0 = ((top - y) * this.resolution._2 / height).toInt
+    val x0 = ((x - left) * this.resolution.x / width).toInt
+    val y0 = ((top - y) * this.resolution.y / height).toInt
     Some((x0, y0))
   }
 
@@ -212,8 +212,8 @@ object Painter {
 
 /// Holds the state of the Canvas when painting to it.
 case class Context(
-    x_bounds: (Double, Double),
-    y_bounds: (Double, Double),
+    x_bounds: Point,
+    y_bounds: Point,
     grid: Grid,
     var dirty: Boolean,
     layers: mutable.ArrayBuffer[Layer],
@@ -222,7 +222,7 @@ case class Context(
   /// Draw any object that may implement the Shape trait
   def draw(shape: Shape): Unit = {
     this.dirty = true
-    var painter = Painter.from(this)
+    val painter = Painter.from(this)
     shape.draw(painter)
   }
 
@@ -248,8 +248,8 @@ object Context {
   def apply(
       width: Int,
       height: Int,
-      x_bounds: (Double, Double),
-      y_bounds: (Double, Double),
+      x_bounds: Point,
+      y_bounds: Point,
       marker: symbols.Marker
   ): Context = {
     val grid: Grid = marker match {
@@ -305,8 +305,8 @@ object Context {
 /// ```
 case class Canvas(
     block: Option[Block] = None,
-    x_bounds: (Double, Double) = (0.0, 0.0),
-    y_bounds: (Double, Double) = (0.0, 0.0),
+    x_bounds: Point = Point.Zero,
+    y_bounds: Point = Point.Zero,
     painter: Option[Context => Unit] = None,
     background_color: Color = Color.Reset,
     /// Change the type of points used to draw the shapes. By default the braille patterns are used
@@ -370,12 +370,12 @@ case class Canvas(
     }
 
     // Finally draw the labels
-    val left = this.x_bounds._1
-    val right = this.x_bounds._2
-    val top = this.y_bounds._2
-    val bottom = this.y_bounds._1
-    val width = math.abs(this.x_bounds._2 - this.x_bounds._1)
-    val height = math.abs(this.y_bounds._2 - this.y_bounds._1)
+    val left = this.x_bounds.x
+    val right = this.x_bounds.y
+    val top = this.y_bounds.y
+    val bottom = this.y_bounds.x
+    val width = math.abs(this.x_bounds.y - this.x_bounds.x)
+    val height = math.abs(this.y_bounds.y - this.y_bounds.x)
     val resolution = {
       val width = (canvas_area.width - 1).toDouble
       val height = (canvas_area.height - 1).toDouble
