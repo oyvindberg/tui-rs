@@ -256,8 +256,8 @@ case class Chart(
 
     render_label(buf, labels.head, label_area, label_alignment)
 
-    ranges.range(1, labels.length - 1) { i =>
-      val label = labels(i)
+    ranges.range(0, labels.length /* first and last not rendered  here */ - 2) { i =>
+      val label = labels(i + 1)
       // We add 1 to x (and width-1 below) to leave at least one space before each intermediate labels
       val x = graph_area.left + (i + 1) * width_between_ticks + 1
       val label_area = Rect(x, y, width_between_ticks.saturating_sub_unsigned(1), 1)
