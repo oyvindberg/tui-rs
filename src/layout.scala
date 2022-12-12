@@ -111,18 +111,20 @@ object Layout {
     }
 
     elements.headOption foreach { first =>
-      layout.direction match {
+      val c = layout.direction match {
         case Direction.Horizontal => first.left | EQ(REQUIRED) | dest_area.left.toDouble
         case Direction.Vertical   => first.top | EQ(REQUIRED) | dest_area.top.toDouble
       }
+      ccs += c
     }
 
     if (layout.expand_to_fill) {
       elements.lastOption.foreach { last =>
-        layout.direction match {
+        val c = layout.direction match {
           case Direction.Horizontal => last.right | EQ(REQUIRED) | dest_area.right.toDouble
           case Direction.Vertical   => last.bottom | EQ(REQUIRED) | dest_area.bottom.toDouble
         }
+        ccs += c
       }
     }
 
