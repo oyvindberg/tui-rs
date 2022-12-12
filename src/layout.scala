@@ -130,7 +130,7 @@ object Layout {
       case Direction.Horizontal =>
         elements.sliding(2).foreach {
           case Array(one, two) => ccs += ((one.x + one.width) | EQ(REQUIRED) | two.x);
-          case Array(_)        => // ignore if only one
+          case _               => // ignore if only one
         }
 
         ranges.range(0, layout.constraints.length) { i =>
@@ -153,7 +153,7 @@ object Layout {
       case Direction.Vertical =>
         elements.sliding(2).foreach {
           case Array(one, two) => ccs += ((one.y + one.height) | EQ(REQUIRED) | two.y);
-          case Array(_)        => // ignore if only one
+          case _               => // ignore if only one
         }
         ranges.range(0, layout.constraints.length) { i =>
           ccs += (elements(i).x | EQ(REQUIRED) | dest_area.x.toDouble);

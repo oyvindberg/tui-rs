@@ -263,12 +263,14 @@ case class Chart(
       val label_area = Rect(x, y, width_between_ticks.saturating_sub_unsigned(1), 1)
 
       render_label(buf, label, label_area, Alignment.Center)
+      ()
     }
 
     val x = graph_area.right - width_between_ticks
     val label_area1 = Rect(x, y, width_between_ticks, 1)
     // The last label should be aligned Right to be at the edge of the graph area
     render_label(buf, labels.last, label_area1, Alignment.Right)
+    ()
   }
 
   def first_x_label_area(y: Int, label_width: Int, max_width_after_y_axis: Int, chart_area: Rect, graph_area: Rect): Rect = {
@@ -289,7 +291,7 @@ case class Chart(
     Rect(min_x, y, max_x - min_x, 1)
   }
 
-  def render_label(buf: Buffer, label: Span, label_area: Rect, alignment: Alignment): Unit = {
+  def render_label(buf: Buffer, label: Span, label_area: Rect, alignment: Alignment): (Int, Int) = {
     val label_width = label.width
     val bounded_label_width = label_area.width.min(label_width)
 
@@ -320,6 +322,7 @@ case class Chart(
           1
         )
         render_label(buf, label, label_area, this.y_axis.labels_alignment)
+        ()
       }
     }
   }
@@ -356,6 +359,7 @@ case class Chart(
       case Some(y) =>
         ranges.range(graph_area.left, graph_area.right) { x =>
           buf.get(x, y).set_symbol(symbols.line.HORIZONTAL).set_style(this.x_axis.style)
+          ()
         }
     }
 
@@ -364,6 +368,7 @@ case class Chart(
       case Some(x) =>
         ranges.range(graph_area.top, graph_area.bottom) { y =>
           buf.get(x, y).set_symbol(symbols.line.VERTICAL).set_style(this.y_axis.style)
+          ()
         }
     }
 
@@ -413,6 +418,7 @@ case class Chart(
             dataset.name,
             dataset.style
           )
+          ()
         }
     }
 
@@ -432,6 +438,7 @@ case class Chart(
         val width = graph_area.right.saturating_sub_unsigned(x)
         buf.set_style(Rect(x, y, width, height = 1), original_style)
         buf.set_spans(x, y, title, width)
+        ()
     }
   }
 }

@@ -80,15 +80,18 @@ case class Gauge(
           .set_symbol(" ")
           .set_fg(gauge_style.bg.getOrElse(Color.Reset))
           .set_bg(gauge_style.fg.getOrElse(Color.Reset));
+        ()
       }
       if (use_unicode && ratio.value < 1.0) {
         buf
           .get(end, y)
           .set_symbol(get_unicode_block(filled_width % 1.0))
+        ()
       }
     }
     // set the span
     buf.set_span(label_col, label_row, label, clamped_label_width)
+    ()
   }
 
   def get_unicode_block(frac: Double): String =
@@ -166,6 +169,7 @@ case class LineGauge(
             sub_modifier = gauge_style.sub_modifier
           )
         );
+      ()
     }
     ranges.range(end, gauge_area.right) { col =>
       buf
@@ -179,6 +183,7 @@ case class LineGauge(
             sub_modifier = gauge_style.sub_modifier
           )
         );
+      ()
     }
   }
 }

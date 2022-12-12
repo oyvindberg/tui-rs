@@ -365,6 +365,7 @@ case class Canvas(
             .get(x + canvas_area.left, y + canvas_area.top)
             .set_char(ch)
             .set_fg(color)
+          ()
         }
       }
     }
@@ -388,6 +389,7 @@ case class Canvas(
         val x = ((label.x - left) * resolution._1 / width).toInt + canvas_area.left
         val y = ((top - label.y) * resolution._2 / height).toInt + canvas_area.top
         buf.set_spans(x, y, label.spans, canvas_area.right - x)
+        ()
       }
     }
   }

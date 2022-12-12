@@ -155,5 +155,6 @@ case class ModifierDiff(from: Modifier, to: Modifier) {
     if (added.contains(Modifier.RAPID_BLINK)) {
       commands.add(new Command.SetAttribute(Attribute.RapidBlink))
     }
+    ()
   }
 }
