@@ -238,7 +238,7 @@ case class Chart(
       case Some(y) => y
       case None    => return
     }
-    val labels = this.x_axis.labels.getOrElse(Array.empty)
+    val labels = this.x_axis.labels.getOrElse(Array.empty[Span])
     val labels_len = labels.length
     if (labels_len < 2) {
       return
@@ -307,7 +307,7 @@ case class Chart(
       case Some(x) => x
       case None    => return
     }
-    val labels = this.y_axis.labels.getOrElse(Array.empty)
+    val labels = this.y_axis.labels.getOrElse(Array.empty[Span])
     val labels_len = labels.length
     ranges.range(0, labels.length) { i =>
       val label = labels(i)
