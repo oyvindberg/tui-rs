@@ -311,8 +311,10 @@ object Text {
     text
   }
 
+  def from(str: String): Text =
+    from(Span.from(str))
   def from(span: Span): Text =
-    Text(lines = Array(Spans.from(span)))
+    from(Spans.from(span))
   def from(spans: Spans): Text =
     Text(lines = Array(spans))
 }
