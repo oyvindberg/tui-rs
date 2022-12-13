@@ -7,7 +7,7 @@ import tui.internal.saturating.IntOps
 import tui.internal.stepBy.StepBySyntax
 import tui.internal.breakableForeach
 import tui.layout.{Constraint, Direction, Layout, Rect}
-import tui.text.Text
+import tui.text.{Span, Text}
 
 import scala.collection.mutable
 
@@ -39,6 +39,11 @@ case class Cell(
     content: Text,
     style: Style = Style.DEFAULT
 )
+
+object Cell {
+  def from(str: String): Cell = from(Span.from(str))
+  def from(span: Span): Cell = Cell(Text.from(span))
+}
 
 /// Holds data to be displayed in a [`Table`] widget.
 ///

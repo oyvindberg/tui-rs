@@ -315,6 +315,8 @@ object Text {
     from(Span.from(str))
   def from(span: Span): Text =
     from(Spans.from(span))
+  def from(spans: Array[Span]): Text =
+    from(Spans.from(spans))
   def from(spans: Spans): Text =
     Text(lines = Array(spans))
 }
